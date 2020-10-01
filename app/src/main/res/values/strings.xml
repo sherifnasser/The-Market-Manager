@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">The Market Manager</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="store">Store</string>
+    <string name="orders">Orders</string>
+    <string name="add_product">Add Product</string>
+    <string name="product_info">Product Info</string>
+    <string name="price_colon">Price: %1s</string>
+    <string name="available_quantity_colon">Available Quantity: %1s</string>
+    <string name="name">Name</string>
+    <string name="price">Price</string>
+    <string name="available_quantity">Available quantity</string>
+    <string name="save">Save</string>
+    <string name="error_field_cannot_be_empty">Field cannot be empty!</string>
+    <string name="error_price_cannot_be_zero">Price cannot be zero!</string>
+    <string name="error_quantity_cannot_be_negative">Quantity cannot be negative!</string>
+    <string name="product_name_field_helper_text_add_product_dialog_fragment">Be careful when entering a product name. It cannot be updated later.</string>
+    <string name="confirm_product_information">Confirm product information</string>
+    <string name="add_product_confirm_dialog_message">Make sure that product info are correct. The product name cannot be updated later.</string>
+    <string name="edit">Edit</string>
+    <string name="save_anyway">Save anyway</string>
+    <string name="you_cannot_modify_the_product_name">You cannot modify the product name, as this may affect orders containing this product.</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_s">Enter %1s</string>
+    <string name="search">Search</string>
+    <string name="discard_changes">Discard changes?</string>
+    <string name="discard">Discard</string>
+    <string name="root_layout_of_appsearchview">Root layout of AppSearchView</string>
+    <string name="root_layout_of_dashboardfragment">Root layout of DashboardFragment</string>
+    <string name="root_layout_of_ordersfragment">Root layout of OrdersFragment</string>
+    <string name="root_layout_of_storefragment">Root layout of StoreFragment</string>
+    <string name="root_layout_of_addproductdialogfragment">Root layout of AddProductDialogFragment</string>
+    <string name="root_layout_of_updateproductinfobottomsheetdialogfragment">Root layout of UpdateProductInfoBottomSheetDialogFragment</string>
+    <string name="display_product_name_info">Display product name info</string>
+    <string name="display_product_price_info">Display product price info</string>
+    <string name="display_product_available_qty_info">Display product available quantity info</string>
+</resources>
