@@ -11,16 +11,16 @@ import com.sherifnasser.themarketmanager.databinding.ProductsRecyclerViewItemLay
 import javax.inject.Inject
 
 class ProductsRecyclerViewAdapter
-@Inject constructor():PagedListAdapter<Product,ProductsRecyclerViewAdapter.ProductItemViewHolder>(diffCallBack){
+@Inject constructor():PagedListAdapter<Product,ProductsRecyclerViewAdapter.ProductItemViewHolder>(DIFF_CALLBACK){
 
     companion object{
-        private val diffCallBack=object:DiffUtil.ItemCallback<Product>(){
-            override fun areItemsTheSame(oldItem:Product,newItem:Product):Boolean=oldItem.id==newItem.id
-            override fun areContentsTheSame(oldItem:Product,newItem:Product):Boolean=oldItem==newItem
+        private val DIFF_CALLBACK=object:DiffUtil.ItemCallback<Product>(){
+            override fun areItemsTheSame(oldItem:Product,newItem:Product)=oldItem.productId==newItem.productId
+            override fun areContentsTheSame(oldItem:Product,newItem:Product)=oldItem==newItem
         }
     }
 
-    override fun onCreateViewHolder(parent:ViewGroup,viewType:Int):ProductItemViewHolder=
+    override fun onCreateViewHolder(parent:ViewGroup,viewType:Int)=
         ProductItemViewHolder(
             ProductsRecyclerViewItemLayoutBinding
                 .inflate(LayoutInflater.from(parent.context),parent,false)
@@ -45,10 +45,8 @@ class ProductsRecyclerViewAdapter
             val context=binding.root.context
             binding.productNameTextView.text=product.name
             binding.productPriceTextView.text=context.getString(R.string.price_colon,product.price.toString())
-            binding.productAvailableQuantityTextView.text=context.getString(R.string.available_quantity_colon,product.availableQuantity.toString())
-            itemView.setOnClickListener{
-                onItemClickListener(product)
-            }
+            binding.productAvailableQuantityTextView.text=context.getString(R.string.available_quantity_colon,product.availableQuantity)
+            itemView.setOnClickListener{onItemClickListener(product)}
         }
 
     }

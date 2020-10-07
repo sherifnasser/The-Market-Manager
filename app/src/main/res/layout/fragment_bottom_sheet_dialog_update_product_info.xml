@@ -8,8 +8,7 @@
     android:paddingTop="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="10dp"
-    tools:context=".ui.fragment.store.UpdateProductInfoBottomSheetDialogFragment"
-    android:contentDescription="@string/root_layout_of_updateproductinfobottomsheetdialogfragment">
+    tools:context=".ui.fragment.store.UpdateProductInfoBottomSheetDialogFragment">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"

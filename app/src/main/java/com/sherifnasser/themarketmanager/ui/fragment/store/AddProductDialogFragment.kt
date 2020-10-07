@@ -1,5 +1,6 @@
 package com.sherifnasser.themarketmanager.ui.fragment.store
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -9,9 +10,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sherifnasser.themarketmanager.*
+import com.sherifnasser.themarketmanager.database.model.Product
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddProductBinding
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddProductDialogFragment:DialogFragment(){
@@ -21,6 +24,9 @@ class AddProductDialogFragment:DialogFragment(){
     private lateinit var productNameEditText:EditText
     private lateinit var productPriceEditText:EditText
     private lateinit var productAvailableQuantityEditText:EditText
+
+    @Inject
+    lateinit var productInfo:Product
 
     override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState)
@@ -45,6 +51,11 @@ class AddProductDialogFragment:DialogFragment(){
     override fun onDestroyView(){
         binding=null
         super.onDestroyView()
+    }
+
+    override fun onAttach(context:Context){
+        super.onAttach(context)
+        productViewModel.productInfo.value=productInfo
     }
 
     override fun onViewCreated(view:View,savedInstanceState:Bundle?){

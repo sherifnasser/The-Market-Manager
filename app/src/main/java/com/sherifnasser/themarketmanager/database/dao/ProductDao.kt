@@ -8,20 +8,26 @@ import com.sherifnasser.themarketmanager.database.model.Product
 @Dao
 interface ProductDao{
     @Insert
-    fun insert(product:Product)
+    suspend fun insert(product:Product)
 
     @Update
-    fun update(product:Product)
+    suspend fun update(product:Product)
 
-    @Query("SELECT * FROM products_table ORDER BY id DESC")
+    @Update
+    suspend fun updateAll(product:List<Product>)
+
+    @Query("SELECT * FROM products_table ORDER BY productId DESC")
     fun getAllProducts():DataSource.Factory<Int,Product>
 
-    @Query("""
-        SELECT products_table.*
-        FROM products_fts
-        JOIN products_table
-        ON (products_fts.rowId=id)
-        WHERE products_fts MATCH '*'||:nameQuery||'*'
-        ORDER BY id DESC""")
+    @Query(
+        """
+            SELECT products_table.*
+            FROM products_fts
+            JOIN products_table
+            ON (products_fts.rowId=productId)
+            WHERE products_fts MATCH '*'||:nameQuery||'*'
+            ORDER BY productId DESC
+            """
+    )
     fun getProductsByName(nameQuery:String):DataSource.Factory<Int,Product>
 }

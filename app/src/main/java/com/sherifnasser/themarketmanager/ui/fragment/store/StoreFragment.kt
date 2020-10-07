@@ -20,9 +20,7 @@ import javax.inject.Inject
 class StoreFragment:Fragment(){
 
     private var binding:FragmentStoreBinding?=null
-
     private val productViewModel:ProductViewModel by activityViewModels()
-
     @Inject lateinit var mAdapter:ProductsRecyclerViewAdapter
 
     override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View?{
@@ -41,7 +39,6 @@ class StoreFragment:Fragment(){
         setHasOptionsMenu(true)
         setupRecyclerView()
         binding!!.addProductFab.setOnClickListener{
-            productViewModel.productInfo.value=Product()
             findNavController().navigate(R.id.action_nav_store_to_addProductDialogFragment)
         }
     }
@@ -50,7 +47,7 @@ class StoreFragment:Fragment(){
 
         // When user click any item in the recyclerView
         mAdapter.setOnItemClickListener{
-            productViewModel.productInfo.value=Product(it.id,it.name,it.price,it.availableQuantity)
+            productViewModel.productInfo.value=Product(it.productId,it.name,it.price,it.availableQuantity)
             findNavController().navigate(R.id.action_nav_store_to_productInfoFragment)
         }
 
@@ -63,7 +60,7 @@ class StoreFragment:Fragment(){
         /*
         It will show any products in recyclerView.
          */
-        productViewModel.products.observe(viewLifecycleOwner,{list->
+        productViewModel.products.observe(viewLifecycleOwner){list->
             // Submit the new list and display it.
             mAdapter.submitList(list){
                 // Scroll to first item when list submitted
@@ -71,7 +68,7 @@ class StoreFragment:Fragment(){
                     it.post{it.scrollToPosition(0)}
                 }
             }
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu:Menu,inflater:MenuInflater){

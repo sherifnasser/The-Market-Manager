@@ -6,6 +6,5 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.dashboard.DashboardFragment"
     android:fitsSystemWindows="true"
-    android:padding="20dp"
-    android:contentDescription="@string/root_layout_of_dashboardfragment">
+    android:padding="20dp">
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

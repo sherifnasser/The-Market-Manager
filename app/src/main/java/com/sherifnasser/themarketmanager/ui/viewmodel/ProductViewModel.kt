@@ -23,7 +23,7 @@ constructor(
     /*
     pagedListConfig: The configuration of the paged list to achieve paging when displaying products.
     */
-    private val pagedListConfig:PagedList.Config
+    pagedListConfig:PagedList.Config
 ):ViewModel(){
 
     private val allProducts by lazy{repository.allProducts.toLiveData(pagedListConfig)}
@@ -38,13 +38,13 @@ constructor(
         }
     }
 
-    private fun io(f:()->Unit)=viewModelScope.launch(ioDispatcher){f()}
-
     // Insert new product.
-    fun insert(product:Product)=io{repository.insert(product)}
+    fun insert(product:Product)=
+        viewModelScope.launch(ioDispatcher){repository.insert(product)}
 
     // Update existing product.
-    fun update(product:Product)=io{repository.update(product)}
+    fun update(product:Product)=
+        viewModelScope.launch(ioDispatcher){repository.update(product)}
 
     // Search in products by productName.
     fun getProductsByName(nameQuery:String){

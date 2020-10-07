@@ -17,10 +17,10 @@ constructor(private val productDao:ProductDao){
     private val _allProducts by lazy{productDao.getAllProducts()}
     
     // Insert new product to database.
-    fun insert(product:Product)=productDao.insert(product)
+    suspend fun insert(product:Product)=productDao.insert(product)
 
     // Update existing product.
-    fun update(product:Product)=productDao.update(product)
+    suspend fun update(product:Product)=productDao.update(product)
 
     // Search in products by productName.
     fun getProductsByName(nameQuery:String)=productDao.getProductsByName(nameQuery)

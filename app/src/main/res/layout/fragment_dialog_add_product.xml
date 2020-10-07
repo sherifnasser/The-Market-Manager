@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.store.AddProductDialogFragment"
-    android:contentDescription="@string/root_layout_of_addproductdialogfragment">
+    tools:context=".ui.fragment.store.AddProductDialogFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

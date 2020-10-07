@@ -10,8 +10,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        android:contentDescription="@string/display_product_name_info">
+        app:cardCornerRadius="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,8 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0.5dp"
         android:foreground="?attr/selectableItemBackground"
-        app:cardCornerRadius="0dp"
-        android:contentDescription="@string/display_product_price_info">
+        app:cardCornerRadius="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"

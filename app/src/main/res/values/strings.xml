@@ -6,7 +6,7 @@
     <string name="add_product">Add Product</string>
     <string name="product_info">Product Info</string>
     <string name="price_colon">Price: %1s</string>
-    <string name="available_quantity_colon">Available Quantity: %1s</string>
+    <string name="available_quantity_colon">Available Quantity: %1o</string>
     <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="available_quantity">Available quantity</string>
@@ -25,13 +25,7 @@
     <string name="search">Search</string>
     <string name="discard_changes">Discard changes?</string>
     <string name="discard">Discard</string>
-    <string name="root_layout_of_appsearchview">Root layout of AppSearchView</string>
-    <string name="root_layout_of_dashboardfragment">Root layout of DashboardFragment</string>
-    <string name="root_layout_of_ordersfragment">Root layout of OrdersFragment</string>
-    <string name="root_layout_of_storefragment">Root layout of StoreFragment</string>
-    <string name="root_layout_of_addproductdialogfragment">Root layout of AddProductDialogFragment</string>
-    <string name="root_layout_of_updateproductinfobottomsheetdialogfragment">Root layout of UpdateProductInfoBottomSheetDialogFragment</string>
-    <string name="display_product_name_info">Display product name info</string>
-    <string name="display_product_price_info">Display product price info</string>
-    <string name="display_product_available_qty_info">Display product available quantity info</string>
+    <string name="id_colon">Id: %1o</string>
+    <string name="date_colon">Date: %1s</string>
+    <string name="total_colon">Total: %1s</string>
 </resources>
