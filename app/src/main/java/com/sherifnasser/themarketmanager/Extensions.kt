@@ -3,7 +3,11 @@ package com.sherifnasser.themarketmanager
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
+
+fun MutableLiveData<*>.notifyUi(){value=value}
 
 fun getImm(v:View)=v.context.getSystemService(Activity.INPUT_METHOD_SERVICE)as InputMethodManager
 

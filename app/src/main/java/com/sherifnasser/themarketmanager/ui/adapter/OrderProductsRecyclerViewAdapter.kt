@@ -2,16 +2,16 @@ package com.sherifnasser.themarketmanager.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.database.model.Product
-import com.sherifnasser.themarketmanager.databinding.ProductsRecyclerViewItemLayoutBinding
+import com.sherifnasser.themarketmanager.database.model.SoldProduct
+import com.sherifnasser.themarketmanager.databinding.OrderProductsRecyclerViewItemLayoutBinding
 import javax.inject.Inject
 
-class ProductsRecyclerViewAdapter
-@Inject constructor():PagedListAdapter<Product,ProductsRecyclerViewAdapter.ProductItemViewHolder>(DIFF_CALLBACK){
+class OrderProductsRecyclerViewAdapter
+@Inject constructor():ListAdapter<Product,OrderProductsRecyclerViewAdapter.SoldProductItemViewHolder>(DIFF_CALLBACK){
 
     companion object{
         private val DIFF_CALLBACK=object:DiffUtil.ItemCallback<Product>(){
@@ -21,14 +21,14 @@ class ProductsRecyclerViewAdapter
     }
 
     override fun onCreateViewHolder(parent:ViewGroup,viewType:Int)=
-        ProductItemViewHolder(
-            ProductsRecyclerViewItemLayoutBinding
+        SoldProductItemViewHolder(
+            OrderProductsRecyclerViewItemLayoutBinding
                 .inflate(LayoutInflater.from(parent.context),parent,false)
         )
 
-    override fun onBindViewHolder(holder:ProductItemViewHolder,position:Int){
+    override fun onBindViewHolder(holder:SoldProductItemViewHolder,position:Int){
         getItem(position).let{
-            if(it!=null)holder.bindTo(it)
+            holder.bindTo(it)
         }
     }
 
@@ -39,15 +39,16 @@ class ProductsRecyclerViewAdapter
         this.onItemClickListener=onItemClickListener
     }
 
-    inner class ProductItemViewHolder(private val binding:ProductsRecyclerViewItemLayoutBinding):RecyclerView.ViewHolder(binding.root){
-
+    inner class SoldProductItemViewHolder(private val binding:OrderProductsRecyclerViewItemLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bindTo(product:Product){
-            val context=binding.root.context
+            val solProduct=(product as SoldProduct)
             binding.productNameTextView.text=product.name
-            binding.productPriceTextView.text=context.getString(R.string.price_colon,product.price.toString())
-            binding.productAvailableQuantityTextView.text=context.getString(R.string.available_quantity_colon,product.availableQuantity.toString())
+            binding.productPriceTextView.text=product.price.toString()
+            binding.productSoldQuantityTextView.text=solProduct.soldQuantity.toString()
+            binding.productTotalPriceTextView.text=(solProduct.soldQuantity*solProduct.price).toString()
             itemView.setOnClickListener{onItemClickListener(product)}
         }
 
     }
+
 }

@@ -1,20 +1,24 @@
 package com.sherifnasser.themarketmanager.ui.fragment.store
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sherifnasser.themarketmanager.*
-import com.sherifnasser.themarketmanager.database.model.Product
+import com.sherifnasser.themarketmanager.R
+import com.sherifnasser.themarketmanager.clearError
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddProductBinding
+import com.sherifnasser.themarketmanager.showError
+import com.sherifnasser.themarketmanager.showKeyboard
+import com.sherifnasser.themarketmanager.hideKeyboard
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddProductDialogFragment:DialogFragment(){
@@ -25,12 +29,9 @@ class AddProductDialogFragment:DialogFragment(){
     private lateinit var productPriceEditText:EditText
     private lateinit var productAvailableQuantityEditText:EditText
 
-    @Inject
-    lateinit var productInfo:Product
-
     override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL,R.style.DialogFragmentStyle)
+        setStyle(STYLE_NORMAL,R.style.FullScreenDialogFragmentStyle)
     }
 
     override fun onStart(){
@@ -53,11 +54,6 @@ class AddProductDialogFragment:DialogFragment(){
         super.onDestroyView()
     }
 
-    override fun onAttach(context:Context){
-        super.onAttach(context)
-        productViewModel.productInfo.value=productInfo
-    }
-
     override fun onViewCreated(view:View,savedInstanceState:Bundle?){
         super.onViewCreated(view,savedInstanceState)
         productNameEditText=binding!!.productNameTextInputLayout.editText!!
@@ -65,23 +61,12 @@ class AddProductDialogFragment:DialogFragment(){
         productAvailableQuantityEditText=binding!!.productAvailableQuantityTextInputLayout.editText!!
         setupToolbar()
         setupViewModelWithTextFields() // This will save the state of the fields.
-        showKeyboard(binding!!.productNameTextInputLayout.editText!!)
+        showKeyboard(productNameEditText)
     }
 
     private fun setupToolbar(){
         binding!!.toolbar.apply{
-            setNavigationOnClickListener{
-                hideKeyboard()
-                // If any field is not empty show a dialog, otherwise dismiss this dialog fragment.
-                if(productNameEditText.text.isNotEmpty()||productPriceEditText.text.isNotEmpty()
-                    ||productAvailableQuantityEditText.text.isNotEmpty())
-                    MaterialAlertDialogBuilder(context)
-                        .setMessage(getString(R.string.discard_changes))
-                        .setPositiveButton(getString(R.string.discard)){_,_->dismiss()}
-                        .setNegativeButton(getString(R.string.cancel)){dialog,_->dialog.dismiss()}
-                        .show()
-                else dismiss()
-            }
+            setNavigationOnClickListener{showDiscardChangesDialog()}
             inflateMenu(R.menu.fragment_dialog_add_product_menu)
             setOnMenuItemClickListener{saveProduct();true}
         }
@@ -162,9 +147,7 @@ class AddProductDialogFragment:DialogFragment(){
                 .setMessage(R.string.add_product_confirm_dialog_message)
                 .setNeutralButton(R.string.edit){dialog,_->dialog.dismiss()}
                 .setPositiveButton(R.string.save_anyway){dialog,_->
-                    productViewModel.apply{
-                        insert(productInfo.value!!)
-                    }
+                    with(productViewModel){insert(productInfo.value!!)}
                     dialog.dismiss()
                     dismiss()
                 }.show()
@@ -240,4 +223,17 @@ class AddProductDialogFragment:DialogFragment(){
     }
 
     private fun hideKeyboard()=hideKeyboard(requireView())
+
+    private fun showDiscardChangesDialog(){
+        hideKeyboard()
+        // If any field is not empty show a dialog, otherwise dismiss this dialog fragment.
+        if(productNameEditText.text.isNotEmpty()||productPriceEditText.text.isNotEmpty()
+            ||productAvailableQuantityEditText.text.isNotEmpty())
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.discard_changes)
+                .setPositiveButton(R.string.discard){_,_->dismiss()}
+                .setNegativeButton(R.string.cancel){dialog,_->dialog.dismiss()}
+                .show()
+        else dismiss()
+    }
 }

@@ -2,14 +2,9 @@ package com.sherifnasser.themarketmanager.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dagger.hilt.android.scopes.FragmentScoped
-import javax.inject.Inject
 
-@FragmentScoped
 @Entity(tableName="products_table")
-open class Product
-@Inject
-constructor(
+open class Product(
     @PrimaryKey(autoGenerate=true)open val productId:Int,
     open var name:String,
     open var price:Double,
@@ -36,6 +31,5 @@ constructor(
         result=31*result+availableQuantity
         return result
     }
-
 
 }

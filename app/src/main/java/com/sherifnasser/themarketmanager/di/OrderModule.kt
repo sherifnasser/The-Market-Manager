@@ -8,25 +8,21 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import java.util.Date
-import java.util.GregorianCalendar
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 object OrderModule{
 
     @Provides
-    fun provideOrderDate():Date=GregorianCalendar.getInstance().time
-
-    @Provides
-    fun provideSoldProducts()=arrayListOf<SoldProduct>()
-
-    @Provides
-    fun provideOrderInfoLiveData()=MutableLiveData<Order>(null)
-
-    @Provides
     fun provideOrderDao(db:TheMarketManagerDatabase)=db.orderDao()
 
     @Provides
     fun provideOrderProductCrossRefDao(db:TheMarketManagerDatabase)=db.orderProductCrossRefDao()
+
+    @Provides
+    fun provideSoldProductsLiveData()=MutableLiveData<List<SoldProduct>>(null)
+
+    @Provides
+    fun provideOrderInfoLiveData()=MutableLiveData<Order>(null)
+
 }

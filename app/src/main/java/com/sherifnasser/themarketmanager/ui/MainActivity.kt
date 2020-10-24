@@ -2,7 +2,6 @@ package com.sherifnasser.themarketmanager.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -12,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.ActivityMainBinding
+import com.sherifnasser.themarketmanager.ui.fragment.OnBackPressedFragmentCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,15 +42,18 @@ class MainActivity:AppCompatActivity(){
 
     override fun onSupportNavigateUp():Boolean=navController.navigateUp(appBarConfig)||super.onSupportNavigateUp()
 
-    /*
-    if the drawer was opened close it.
-    Or if the search view was opened every where close it
-    Otherwise execute the super.
-     */
     override fun onBackPressed()=
         when{
             binding.drawerLayout.isDrawerOpen(GravityCompat.START)->binding.drawerLayout.closeDrawer(GravityCompat.START)
             binding.searchView.shouldClose->binding.searchView.closeSearchWithAnimation()
-            else->super.onBackPressed()
+            else->{
+                val visibleFragment=supportFragmentManager.fragments.last()
+                if(visibleFragment is OnBackPressedFragmentCallback)
+                    (visibleFragment as OnBackPressedFragmentCallback).onBackPressed{
+                        super.onBackPressed()
+                    }
+                else super.onBackPressed()
+            }
         }
+
 }

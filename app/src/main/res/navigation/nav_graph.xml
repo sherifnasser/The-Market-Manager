@@ -29,7 +29,11 @@
         android:id="@id/nav_orders"
         android:name="com.sherifnasser.themarketmanager.ui.fragment.orders.OrdersFragment"
         android:label="@string/orders"
-        tools:layout="@layout/fragment_orders"/>
+        tools:layout="@layout/fragment_orders">
+        <action
+            android:id="@+id/action_nav_orders_to_addOrderDialogFragment"
+            app:destination="@id/addOrderDialogFragment"/>
+    </fragment>
     <dialog
         android:id="@+id/addProductDialogFragment"
         android:name="com.sherifnasser.themarketmanager.ui.fragment.store.AddProductDialogFragment"
@@ -52,5 +56,36 @@
             android:name="titleResId"
             app:argType="integer"
             android:defaultValue="-1"/>
+    </dialog>
+    <dialog
+        android:id="@+id/addOrderDialogFragment"
+        android:name="com.sherifnasser.themarketmanager.ui.fragment.orders.AddOrderDialogFragment"
+        android:label="@string/add_order"
+        tools:layout="@layout/fragment_dialog_add_order">
+        <action
+            android:id="@+id/action_addOrderDialogFragment_to_addOrderProductDialogFragment"
+            app:destination="@id/addOrderProductDialogFragment"/>
+        <action
+            android:id="@+id/action_addOrderDialogFragment_to_productSoldQuantityDialogFragment"
+            app:destination="@id/productSoldQuantityDialogFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/addOrderProductDialogFragment"
+        android:name="com.sherifnasser.themarketmanager.ui.fragment.orders.AddOrderProductDialogFragment"
+        android:label="@string/select_product"
+        tools:layout="@layout/fragment_dialog_add_order_product">
+        <action
+            android:id="@+id/action_addOrderProductDialogFragment_to_productSoldQuantityDialogFragment"
+            app:destination="@id/productSoldQuantityDialogFragment"
+            app:popUpTo="@id/addOrderDialogFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/productSoldQuantityDialogFragment"
+        android:name="com.sherifnasser.themarketmanager.ui.fragment.orders.ProductSoldQuantityDialogFragment"
+        android:label="@string/sold_quantity"
+        tools:layout="@layout/fragment_dialog_product_sold_quantity" >
+        <argument
+            android:name="selectedProduct"
+            app:argType="com.sherifnasser.themarketmanager.database.model.SoldProduct" />
     </dialog>
 </navigation>

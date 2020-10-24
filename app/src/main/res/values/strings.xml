@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">The Market Manager</string>
     <string name="dashboard">Dashboard</string>
     <string name="store">Store</string>
@@ -6,7 +6,7 @@
     <string name="add_product">Add Product</string>
     <string name="product_info">Product Info</string>
     <string name="price_colon">Price: %1s</string>
-    <string name="available_quantity_colon">Available Quantity: %1o</string>
+    <string name="available_quantity_colon">Available Quantity: %1s</string>
     <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="available_quantity">Available quantity</string>
@@ -25,7 +25,24 @@
     <string name="search">Search</string>
     <string name="discard_changes">Discard changes?</string>
     <string name="discard">Discard</string>
-    <string name="id_colon">Id: %1o</string>
+    <string name="id_colon">Id: %1s</string>
     <string name="date_colon">Date: %1s</string>
     <string name="total_colon">Total: %1s</string>
+    <string name="add_order">Add Order</string>
+    <string name="total">Total</string>
+    <string name="tab_to_add_products">Tab + to add products</string>
+    <string name="done">Done</string>
+    <string name="enter_product_name">Enter product name</string>
+    <string name="ok">OK</string>
+    <string name="available_colon">Available: %1s</string>
+    <string name="select_product">Select product</string>
+    <string name="sold_quantity">Sold quantity</string>
+    <string name="enter_sold_quantity_for_selected_product">Enter sold quantity for selected product:</string>
+    <string name="you_must_enter_valid_quantity">You must enter valid quantity!</string>
+    <string name="the_product_is_not_available">The product isn\'t available.</string>
+    <string name="confirm_order_information">Confirm order information</string>
+    <string name="order_info_confirm_dialog_message">Before proceed, please check order products, prices and total.</string>
+    <string name="order_sold_products_cannot_be_empty">Order sold products cannot be empty.</string>
+    <string name="order_is_deleted">Order is deleted</string>
+    <string name="undo">Undo</string>
 </resources>

@@ -30,5 +30,9 @@ constructor(
 
     suspend fun getOrderWithProducts(orderId:Int)=orderDao.getOrderWithProducts(orderId)
 
+    suspend fun deleteOrder(order:Order)=orderDao.delete(order)
+
+    suspend fun deleteAllOrderProductCrossRefWhere(orderId:Int)=orderProductCrossRefDao.deleteAllWhere(orderId)
+
     val allOrders get()=_allOrders
 }

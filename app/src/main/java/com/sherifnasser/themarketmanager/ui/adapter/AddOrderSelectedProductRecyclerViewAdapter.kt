@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.database.model.Product
-import com.sherifnasser.themarketmanager.databinding.ProductsRecyclerViewItemLayoutBinding
+import com.sherifnasser.themarketmanager.databinding.AddOrderSelectedProductRecyclerViewItemLayoutBinding
 import javax.inject.Inject
 
-class ProductsRecyclerViewAdapter
-@Inject constructor():PagedListAdapter<Product,ProductsRecyclerViewAdapter.ProductItemViewHolder>(DIFF_CALLBACK){
+class AddOrderSelectedProductRecyclerViewAdapter
+@Inject constructor():PagedListAdapter<Product,AddOrderSelectedProductRecyclerViewAdapter.SelectedProductItemViewHolder>(DIFF_CALLBACK){
 
     companion object{
         private val DIFF_CALLBACK=object:DiffUtil.ItemCallback<Product>(){
@@ -21,12 +21,12 @@ class ProductsRecyclerViewAdapter
     }
 
     override fun onCreateViewHolder(parent:ViewGroup,viewType:Int)=
-        ProductItemViewHolder(
-            ProductsRecyclerViewItemLayoutBinding
+        SelectedProductItemViewHolder(
+            AddOrderSelectedProductRecyclerViewItemLayoutBinding
                 .inflate(LayoutInflater.from(parent.context),parent,false)
         )
 
-    override fun onBindViewHolder(holder:ProductItemViewHolder,position:Int){
+    override fun onBindViewHolder(holder:SelectedProductItemViewHolder, position:Int){
         getItem(position).let{
             if(it!=null)holder.bindTo(it)
         }
@@ -39,13 +39,12 @@ class ProductsRecyclerViewAdapter
         this.onItemClickListener=onItemClickListener
     }
 
-    inner class ProductItemViewHolder(private val binding:ProductsRecyclerViewItemLayoutBinding):RecyclerView.ViewHolder(binding.root){
-
+    inner class SelectedProductItemViewHolder(private val binding:AddOrderSelectedProductRecyclerViewItemLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bindTo(product:Product){
             val context=binding.root.context
             binding.productNameTextView.text=product.name
-            binding.productPriceTextView.text=context.getString(R.string.price_colon,product.price.toString())
-            binding.productAvailableQuantityTextView.text=context.getString(R.string.available_quantity_colon,product.availableQuantity.toString())
+            binding.productPriceTextView.text=product.price.toString()
+            binding.productAvailableQuantityTextView.text=context.getString(R.string.available_colon,product.availableQuantity.toString())
             itemView.setOnClickListener{onItemClickListener(product)}
         }
 

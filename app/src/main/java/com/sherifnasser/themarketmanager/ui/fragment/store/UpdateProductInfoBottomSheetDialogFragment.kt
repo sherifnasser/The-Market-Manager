@@ -17,6 +17,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentBottomSheetDialogUpdateProductInfoBinding
+import com.sherifnasser.themarketmanager.notifyUi
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -133,7 +134,7 @@ class UpdateProductInfoBottomSheetDialogFragment:BottomSheetDialogFragment(){
                             product.availableQuantity=toInt()
                         }
                     }
-                    productViewModel.productInfo.value=product
+                    productViewModel.productInfo.notifyUi()
                     productViewModel.update(product)
                     dismiss()
                 }

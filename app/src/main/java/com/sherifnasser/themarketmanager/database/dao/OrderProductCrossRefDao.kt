@@ -11,6 +11,12 @@ interface OrderProductCrossRefDao{
     @Insert
     suspend fun insertAll(orderProductCrossRefs:List<OrderProductCrossRef>)
 
+    @Query("""
+        DELETE FROM orders_products_cross_ref_table
+        WHERE orderId=:orderId
+        """)
+    suspend fun deleteAllWhere(orderId:Int)
+
     @Query(
         """
         SELECT soldQuantity FROM orders_products_cross_ref_table

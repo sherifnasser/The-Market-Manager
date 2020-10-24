@@ -45,7 +45,8 @@ class OrdersRecyclerViewAdapter
 
         fun bindTo(order:Order){
             val context=binding.root.context
-            binding.orderIdTextView.text=context.getString(R.string.id_colon,order.orderId)
+            binding.orderIdTextView.text=context.getString(R.string.id_colon,order.orderId.toString())
+
             val orderDate=dateFormat.format(order.date)
             binding.orderDateTextView.text=context.getString(R.string.date_colon,orderDate)
             binding.orderTotalTextView.text=context.getString(R.string.total_colon,order.total.toString())
