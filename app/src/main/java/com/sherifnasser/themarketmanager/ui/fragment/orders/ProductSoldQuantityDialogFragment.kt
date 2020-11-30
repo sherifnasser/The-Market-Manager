@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogProductSoldQuantityBinding
@@ -78,7 +77,7 @@ class ProductSoldQuantityDialogFragment:DialogFragment(){
             else{
                 selectedProduct.soldQuantity=soldQuantity
                 with(orderViewModel.orderInfo){
-                    value!!.addInSoldProducts(selectedProduct)
+                    value!!.addToSoldProducts(selectedProduct)
                     notifyUi()
                 }
                 dismiss()

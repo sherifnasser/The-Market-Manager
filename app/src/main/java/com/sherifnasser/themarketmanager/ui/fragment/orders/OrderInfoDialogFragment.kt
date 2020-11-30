@@ -1,36 +1,38 @@
 package com.sherifnasser.themarketmanager.ui.fragment.orders
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.database.model.SoldProduct
-import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddOrderBinding
+import com.sherifnasser.themarketmanager.databinding.FragmentDialogOrderInfoBinding
 import com.sherifnasser.themarketmanager.notifyUi
 import com.sherifnasser.themarketmanager.ui.adapter.OrderProductsRecyclerViewAdapter
-import com.sherifnasser.themarketmanager.ui.fragment.OnBackPressedFragmentCallback
 import com.sherifnasser.themarketmanager.ui.viewmodel.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
+class OrderInfoDialogFragment():DialogFragment(){
 
-    private var binding:FragmentDialogAddOrderBinding?=null
+    private var binding:FragmentDialogOrderInfoBinding?=null
     private val orderViewModel by activityViewModels<OrderViewModel>()
     @Inject lateinit var dateFormat:DateFormat
     @Inject lateinit var mAdapter:OrderProductsRecyclerViewAdapter
+    private val args by navArgs<OrderInfoDialogFragmentArgs>()
+    private val isAddOrderRequested by lazy{args.isAddOrderRequested}
 
     private val itemTouchHelper by lazy{
         ItemTouchHelper(
@@ -39,7 +41,7 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
 
                 override fun onSwiped(viewHolder:RecyclerView.ViewHolder,direction:Int){
                     with(orderViewModel.orderInfo){
-                        value!!.removeFromSoldProductAt(viewHolder.adapterPosition)
+                        value!!.removeFromSoldProductsAt(viewHolder.adapterPosition)
                         notifyUi()
                     }
                 }
@@ -62,7 +64,7 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
     }
 
     override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View?{
-        binding=FragmentDialogAddOrderBinding.inflate(inflater,container,false)
+        binding=FragmentDialogOrderInfoBinding.inflate(inflater,container,false)
         return binding!!.root
     }
 
@@ -77,12 +79,14 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
         setupOrderInfo()
         setupRecyclerView()
         setupBottomAppBar()
+        setupDeleteOrderFab()
     }
 
     private fun setupToolbar(){
         binding!!.toolbar.apply{
+            if(isAddOrderRequested)title=getString(R.string.add_order)
             setNavigationOnClickListener{showDiscardChangesDialog()}
-            inflateMenu(R.menu.fragment_dialog_add_order_menu)
+            inflateMenu(R.menu.fragment_dialog_order_info_menu)
             setOnMenuItemClickListener{saveOrder();true}
         }
     }
@@ -97,7 +101,7 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
                 binding!!.orderDateTextView.text=getString(R.string.date_colon,orderDate)
             }
 
-            observe(viewLifecycleOwner){order->
+            observe(viewLifecycleOwner,Observer{order->
                 val soldProductsList=order.soldProducts!!.toList()
                 // Show "Tab + to add products" text view when list is empty
                 binding!!.tabPlusTextView.visibility=if(soldProductsList.isEmpty())View.VISIBLE else View.GONE
@@ -110,17 +114,16 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
                 }
                 // Update total text view
                 binding!!.orderTotalTextView.text=order.total.toString()
-            }
+            })
         }
     }
 
     private fun setupRecyclerView(){
         mAdapter.setOnItemClickListener{
-            val action=AddOrderDialogFragmentDirections
-                .actionAddOrderDialogFragmentToProductSoldQuantityDialogFragment(selectedProduct=(it as SoldProduct).copy())
+            val action=OrderInfoDialogFragmentDirections
+                .actionOrderInfoDialogFragmentToProductSoldQuantityDialogFragment(selectedProduct=(it as SoldProduct).copy())
             findNavController().navigate(action)
         }
-
 
         with(binding!!.orderProductsRecyclerView){
             layoutManager=LinearLayoutManager(context).apply{reverseLayout=true;stackFromEnd=true}
@@ -132,7 +135,7 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
     private fun setupBottomAppBar(){
         binding!!.bottomAppBar.setOnMenuItemClickListener{
             // navigate to add products to the order
-            findNavController().navigate(R.id.action_addOrderDialogFragment_to_addOrderProductDialogFragment)
+            findNavController().navigate(R.id.action_orderInfoDialogFragment_to_addOrderProductDialogFragment)
             true
         }
     }
@@ -140,38 +143,52 @@ class AddOrderDialogFragment():DialogFragment(),OnBackPressedFragmentCallback{
     private fun saveOrder(){
         if(orderViewModel.orderInfo.value!!.soldProducts!!.isEmpty())
             Toast.makeText(requireContext(),R.string.order_sold_products_cannot_be_empty,Toast.LENGTH_LONG).show()
-        else{
+        else
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.confirm_order_information)
                 .setMessage(R.string.order_info_confirm_dialog_message)
                 .setPositiveButton(R.string.save_anyway){dialog,_->
-                    with(orderViewModel){insert(orderInfo.value!!)}
-                    dialog.dismiss()
-                    dismiss()
+                    val onDone={
+                        dialog.dismiss()
+                        dismiss()
+                    }
+                    with(orderViewModel){
+                        if(isAddOrderRequested)
+                            insert(orderInfo.value!!){onDone()}
+                        else
+                            update(orderInfo.value!!){onDone()}
+                    }
                 }
                 .setNegativeButton(R.string.edit){dialog,_->dialog.dismiss()}
                 .show()
+    }
+
+    private fun setupDeleteOrderFab(){
+        with(binding!!.deleteOrderFab){
+            if(isAddOrderRequested)visibility=View.GONE
+            else setOnClickListener{
+                MaterialAlertDialogBuilder(requireContext())
+                    .setMessage(R.string.sure_to_delete)
+                    .setPositiveButton(R.string.delete){dialog,_->
+                        orderViewModel.delete(orderViewModel.orderInfo.value!!){
+                            dialog.dismiss()
+                            dismiss()
+                        }
+                    }
+                    .setNegativeButton(R.string.cancel){dialog,_->dialog.dismiss()}
+                    .show()
+            }
         }
     }
 
-    private val TAG="AddOrderDialogFragment"
-
-    private fun showDiscardChangesDialog(onFinishCall:()->Unit={}){
-        if(orderViewModel.areOrderInfoSoldProductsChanged){
-            Log.d(TAG,"showDiscardChangesDialog: ${orderViewModel._orderInfoOldSoldProducts.value!!} and ${orderViewModel.orderInfo.value!!.soldProducts!!}")
+    private fun showDiscardChangesDialog(){
+        if(orderViewModel.areOrderInfoSoldProductsChanged)
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.discard_changes)
-                .setPositiveButton(R.string.discard){_,_->dismiss();onFinishCall.invoke()}
+                .setPositiveButton(R.string.discard){_,_->dismiss()}
                 .setNegativeButton(R.string.cancel){dialog,_->dialog.dismiss()}
                 .show()
-        }else{
-            dismiss()
-            onFinishCall.invoke()
-        }
-    }
-
-    override fun onBackPressed(onFinishCall:()->Unit){
-        showDiscardChangesDialog(onFinishCall)
+        else dismiss()
     }
 
 }

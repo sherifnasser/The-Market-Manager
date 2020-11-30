@@ -11,12 +11,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sherifnasser.themarketmanager.R
-import com.sherifnasser.themarketmanager.clearError
+import com.sherifnasser.themarketmanager.*
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddProductBinding
-import com.sherifnasser.themarketmanager.showError
-import com.sherifnasser.themarketmanager.showKeyboard
-import com.sherifnasser.themarketmanager.hideKeyboard
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

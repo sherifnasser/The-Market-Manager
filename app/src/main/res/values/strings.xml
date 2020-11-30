@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">The Market Manager</string>
     <string name="dashboard">Dashboard</string>
     <string name="store">Store</string>
@@ -43,6 +43,8 @@
     <string name="confirm_order_information">Confirm order information</string>
     <string name="order_info_confirm_dialog_message">Before proceed, please check order products, prices and total.</string>
     <string name="order_sold_products_cannot_be_empty">Order sold products cannot be empty.</string>
-    <string name="order_is_deleted">Order is deleted</string>
-    <string name="undo">Undo</string>
+    <string name="sure_to_delete">Sure To delete?</string>
+    <string name="delete">Delete</string>
+    <string name="order_info">Order Info</string>
+    <string name="delete_order">Delete order</string>
 </resources>

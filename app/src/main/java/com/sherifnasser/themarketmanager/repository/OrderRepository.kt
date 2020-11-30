@@ -18,21 +18,36 @@ constructor(
 
     private val _allOrders by lazy{orderDao.getAllOrders()}
 
+    suspend fun getOrderWithProducts(orderId:Int)=orderDao.getOrderWithProducts(orderId)
+
+
     suspend fun insertOrder(order:Order)=orderDao.insert(order)
 
-    suspend fun insertOrderProductCrossRef(orderProductCrossRefs:List<OrderProductCrossRef>)=
+    suspend fun updateOrder(order:Order)=orderDao.update(order)
+
+    suspend fun deleteOrder(order:Order)=orderDao.delete(order)
+
+
+
+    suspend fun insertOrderProductCrossRefs(orderProductCrossRefs:List<OrderProductCrossRef>)=
         orderProductCrossRefDao.insertAll(orderProductCrossRefs)
+
+    suspend fun updateOrderProductCrossRefs(orderProductCrossRefs:List<OrderProductCrossRef>)=
+        orderProductCrossRefDao.updateAll(orderProductCrossRefs)
+
+    suspend fun deleteOrderProductCrossRefs(orderProductCrossRefs:List<OrderProductCrossRef>)=
+        orderProductCrossRefDao.deleteAll(orderProductCrossRefs)
+
+    suspend fun deleteAllOrderProductCrossRefsWhere(orderId:Int)=
+        orderProductCrossRefDao.deleteAllWhere(orderId)
+
+
 
     suspend fun updateProducts(products:List<Product>)=productDao.updateAll(products)
 
     suspend fun getQuantityOfSoldProduct(orderId:Int,productId:Int)=
         orderProductCrossRefDao.getQuantityOfSoldProduct(orderId,productId)
 
-    suspend fun getOrderWithProducts(orderId:Int)=orderDao.getOrderWithProducts(orderId)
-
-    suspend fun deleteOrder(order:Order)=orderDao.delete(order)
-
-    suspend fun deleteAllOrderProductCrossRefWhere(orderId:Int)=orderProductCrossRefDao.deleteAllWhere(orderId)
 
     val allOrders get()=_allOrders
 }

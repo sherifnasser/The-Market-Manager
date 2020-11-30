@@ -1,7 +1,7 @@
 package com.sherifnasser.themarketmanager.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -11,7 +11,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.ActivityMainBinding
-import com.sherifnasser.themarketmanager.ui.fragment.OnBackPressedFragmentCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,14 +45,7 @@ class MainActivity:AppCompatActivity(){
         when{
             binding.drawerLayout.isDrawerOpen(GravityCompat.START)->binding.drawerLayout.closeDrawer(GravityCompat.START)
             binding.searchView.shouldClose->binding.searchView.closeSearchWithAnimation()
-            else->{
-                val visibleFragment=supportFragmentManager.fragments.last()
-                if(visibleFragment is OnBackPressedFragmentCallback)
-                    (visibleFragment as OnBackPressedFragmentCallback).onBackPressed{
-                        super.onBackPressed()
-                    }
-                else super.onBackPressed()
-            }
+            else->super.onBackPressed()
         }
 
 }

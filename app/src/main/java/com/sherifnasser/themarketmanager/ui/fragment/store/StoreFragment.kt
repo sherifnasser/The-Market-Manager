@@ -7,12 +7,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sherifnasser.themarketmanager.R
-import com.sherifnasser.themarketmanager.ui.adapter.ProductsRecyclerViewAdapter
+import com.sherifnasser.themarketmanager.database.model.Product
 import com.sherifnasser.themarketmanager.databinding.FragmentStoreBinding
 import com.sherifnasser.themarketmanager.hideKeyboard
-import com.sherifnasser.themarketmanager.database.model.Product
-import com.sherifnasser.themarketmanager.ui.widget.AppSearchView
+import com.sherifnasser.themarketmanager.ui.adapter.ProductsRecyclerViewAdapter
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
+import com.sherifnasser.themarketmanager.ui.widget.AppSearchView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

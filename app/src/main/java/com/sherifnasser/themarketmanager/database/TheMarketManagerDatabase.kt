@@ -6,7 +6,10 @@ import androidx.room.TypeConverters
 import com.sherifnasser.themarketmanager.database.dao.OrderDao
 import com.sherifnasser.themarketmanager.database.dao.OrderProductCrossRefDao
 import com.sherifnasser.themarketmanager.database.dao.ProductDao
-import com.sherifnasser.themarketmanager.database.model.*
+import com.sherifnasser.themarketmanager.database.model.Order
+import com.sherifnasser.themarketmanager.database.model.OrderProductCrossRef
+import com.sherifnasser.themarketmanager.database.model.Product
+import com.sherifnasser.themarketmanager.database.model.ProductFts
 
 @Database(
     entities=[

@@ -9,7 +9,10 @@ import com.sherifnasser.themarketmanager.database.model.OrderWithProducts
 interface OrderDao{
 
     @Insert
-    suspend fun insert(order:Order):Long
+    suspend fun insert(order:Order)
+
+    @Update
+    suspend fun update(order:Order)
 
     @Delete
     suspend fun delete(order:Order)
@@ -20,6 +23,5 @@ interface OrderDao{
     @Transaction
     @Query("SELECT * FROM orders_table WHERE orderId=:orderId")
     suspend fun getOrderWithProducts(orderId:Int):OrderWithProducts
-
 
 }

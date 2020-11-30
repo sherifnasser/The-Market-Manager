@@ -1,17 +1,17 @@
 package com.sherifnasser.themarketmanager.ui.fragment.orders
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sherifnasser.themarketmanager.R
+import com.sherifnasser.themarketmanager.database.model.Order
 import com.sherifnasser.themarketmanager.databinding.FragmentOrdersBinding
 import com.sherifnasser.themarketmanager.ui.adapter.OrdersRecyclerViewAdapter
 import com.sherifnasser.themarketmanager.ui.viewmodel.OrderViewModel
@@ -25,31 +25,6 @@ class OrdersFragment:Fragment(){
     private val orderViewModel by activityViewModels<OrderViewModel>()
     @Inject lateinit var mAdapter:OrdersRecyclerViewAdapter
 
-    private val itemTouchHelper by lazy{
-        ItemTouchHelper(
-            object:ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
-                override fun onMove(recyclerView:RecyclerView,viewHolder:RecyclerView.ViewHolder,target:RecyclerView.ViewHolder)=false
-
-                override fun onSwiped(viewHolder:RecyclerView.ViewHolder,direction:Int){
-                    val selectedOrderPosition=viewHolder.adapterPosition
-                    orderViewModel.setOrderInfo(orderViewModel.allOrders.value!![selectedOrderPosition]!!)
-                    orderViewModel.deleteOrderFromUiAt(selectedOrderPosition)
-
-                    Snackbar.make(binding!!.addOrderFab,getString(R.string.order_is_deleted),Snackbar.LENGTH_LONG)
-                        .addCallback(object:Snackbar.Callback(){
-                            override fun onDismissed(transientBottomBar:Snackbar?,event:Int){
-                                orderViewModel.delete(orderViewModel.orderInfo.value!!)
-                            }
-                        })
-                        .setAction(getString(R.string.undo)){
-                            orderViewModel.undoOrderInUiAt(selectedOrderPosition)
-                        }
-                        .show()
-                }
-            }
-        )
-    }
-
     override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View?{
         binding=FragmentOrdersBinding.inflate(inflater,container,false)
         return binding!!.root
@@ -62,32 +37,47 @@ class OrdersFragment:Fragment(){
 
     override fun onViewCreated(view:View,savedInstanceState:Bundle?){
         super.onViewCreated(view,savedInstanceState)
-
         setupRecyclerView()
-
-        binding!!.addOrderFab.setOnClickListener{
-            orderViewModel.setOrderInfoToNew()
-            findNavController().navigate(R.id.action_nav_orders_to_addOrderDialogFragment)
-        }
+        binding!!.addOrderFab.setOnClickListener{navigateToAddOrder()}
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         // When user click any item in the recyclerView
-        mAdapter.setOnItemClickListener{
-            orderViewModel.setOrderInfo(it)
+
+        with(mAdapter){
+
+            setOnItemClickListener{order->navigateToEditOrder(order)}
+
+            setOnMoreOptionMenuItemClickListener{menuItemId,order->
+                when(menuItemId){
+
+                    R.id.popup_edit_order_menu_item->navigateToEditOrder(order)
+
+                    R.id.popup_delete_order_menu_item->
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setMessage(R.string.sure_to_delete)
+                            .setPositiveButton(R.string.delete){dialog,_->
+                                orderViewModel.delete(order){
+                                    dialog.dismiss()
+                                }
+                            }
+                            .setNegativeButton(R.string.cancel){dialog,_->dialog.dismiss()}
+                            .show()
+                }
+            }
         }
+
 
         // RecyclerView
         binding!!.ordersRecyclerView.apply{
             adapter=mAdapter
             layoutManager=LinearLayoutManager(context)
-            itemTouchHelper.attachToRecyclerView(this)
         }
 
         /*
         It will show any orders in recyclerView.
          */
-        orderViewModel.allOrders.observe(viewLifecycleOwner){list->
+        orderViewModel.allOrders.observe(viewLifecycleOwner,Observer{list->
             // Submit the new list and display it.
             mAdapter.submitList(list){
                 // Scroll to first item when list submitted
@@ -95,7 +85,18 @@ class OrdersFragment:Fragment(){
                     it.post{it.scrollToPosition(0)}
                 }
             }
-        }
+        })
     }
 
+    private fun navigateToAddOrder(){
+        orderViewModel.setOrderInfoToNew()
+        val action=OrdersFragmentDirections.actionNavOrdersToOrderInfoDialogFragment(isAddOrderRequested=true)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToEditOrder(order:Order){
+        orderViewModel.setOrderInfo(order){
+            findNavController().navigate(R.id.action_nav_orders_to_orderInfoDialogFragment)
+        }
+    }
 }

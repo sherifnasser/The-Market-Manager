@@ -3,7 +3,7 @@ package com.sherifnasser.themarketmanager.database.model
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import java.util.Date
+import java.util.*
 
 @Entity(tableName="orders_table")
 data class Order
@@ -15,10 +15,10 @@ constructor(
     @Ignore
     var soldProducts:List<SoldProduct>?=null
 
-    fun addInSoldProducts(product:SoldProduct){
+    fun addToSoldProducts(product:SoldProduct){
         val soldProductsArrayList=soldProducts!! as ArrayList
         // If the product exists, remove it and update total
-        soldProductsArrayList!!.forEachIndexed{index,soldProduct->
+        soldProductsArrayList.forEachIndexed{index,soldProduct->
             if(soldProduct.productId==product.productId){
                 total-=soldProduct.soldQuantity*soldProduct.price
                 soldProductsArrayList[index]=product
@@ -32,7 +32,7 @@ constructor(
         total+=product.soldQuantity*product.price
     }
 
-    fun removeFromSoldProductAt(index:Int){
+    fun removeFromSoldProductsAt(index:Int){
         val soldProductsArrayList=soldProducts!! as ArrayList
         val product=soldProductsArrayList[index]
         total-=product.soldQuantity*product.price

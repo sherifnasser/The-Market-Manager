@@ -1,8 +1,6 @@
 package com.sherifnasser.themarketmanager.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.sherifnasser.themarketmanager.database.model.OrderProductCrossRef
 
 @Dao
@@ -10,6 +8,12 @@ interface OrderProductCrossRefDao{
 
     @Insert
     suspend fun insertAll(orderProductCrossRefs:List<OrderProductCrossRef>)
+
+    @Update
+    suspend fun updateAll(orderProductCrossRefs:List<OrderProductCrossRef>)
+
+    @Delete
+    suspend fun deleteAll(orderProductCrossRefs:List<OrderProductCrossRef>)
 
     @Query("""
         DELETE FROM orders_products_cross_ref_table
