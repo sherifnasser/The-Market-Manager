@@ -17,9 +17,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.database.model.SoldProduct
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogOrderInfoBinding
-import com.sherifnasser.themarketmanager.notifyUi
 import com.sherifnasser.themarketmanager.ui.adapter.OrderProductsRecyclerViewAdapter
 import com.sherifnasser.themarketmanager.ui.viewmodel.OrderViewModel
+import com.sherifnasser.themarketmanager.util.notifyUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
 import javax.inject.Inject

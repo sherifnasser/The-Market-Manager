@@ -12,8 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.NavController
 import com.sherifnasser.themarketmanager.databinding.AppSearchViewBinding
-import com.sherifnasser.themarketmanager.hideKeyboard
-import com.sherifnasser.themarketmanager.showKeyboard
+import com.sherifnasser.themarketmanager.util.showKeyboard
+import com.sherifnasser.themarketmanager.util.hideKeyboard
 
 class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 

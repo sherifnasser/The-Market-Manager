@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.GregorianCalendar
 import kotlin.collections.ArrayList
 
 class OrderViewModel
@@ -61,8 +61,6 @@ constructor(
         return fullOrder
     }
 
-    private suspend fun updateProducts(products:List<Product>)=orderRepository.updateProducts(products)
-
     fun insert(order:Order,onDone:()->Unit={}){
         /*
         1- insert order in database
@@ -98,50 +96,15 @@ constructor(
         }
     }
 
-    fun delete(order:Order,onDone:()->Unit={}){
-        /*
-        1- get full order info from database if order's soldProducts list is null
-        2- delete order from database
-        3- increase available qty of sold products in database
-        4- update products in database
-        5- delete orderProductCrossRefs in database
-        6- invoke onDone
-        */
-        viewModelScope.launch(ioDispatcher){
-
-            // 1- get full order info from database if order's soldProducts list is null
-            val orderToDelete=if(order.soldProducts==null)getOrder(order)else order
-
-            // 2- delete order from database
-            orderRepository.deleteOrder(orderToDelete)
-
-            // 3- increase available qty of sold products in database
-            orderToDelete.soldProducts!!.forEach{soldProduct->
-                with(soldProduct){
-                    availableQuantity+=soldQuantity
-                }
-            }
-
-            // 4- update products in database
-            updateProducts(orderToDelete.soldProducts!!)
-
-            // 5- delete orderProductCrossRefs in database
-            orderRepository.deleteAllOrderProductCrossRefsWhere(orderToDelete.orderId)
-
-            // 6- invoke onDone
-            withContext(Main){onDone.invoke()}
-        }
-    }
-
     fun update(order:Order,onDone:()->Unit={}){
         if(!areOrderInfoSoldProductsChanged){
             onDone()
             return
         }
 
-        val oldSoldProducts=sortSoldProducts(_orderInfoOldSoldProducts.value!!)
+        val oldSoldProducts=_orderInfoOldSoldProducts.value!!.sortedBy{it.productId}
 
-        val newSoldProducts=sortSoldProducts(order.soldProducts!!)
+        val newSoldProducts=order.soldProducts!!.sortedBy{it.productId}.toMutableList()
         val updatedSoldProducts=arrayListOf<SoldProduct>()
         val deletedSoldProducts=arrayListOf<SoldProduct>()
 
@@ -149,17 +112,18 @@ constructor(
         val updatedSoldProductsCrossRefs=arrayListOf<OrderProductCrossRef>()
         val deletedSoldProductsCrossRefs=arrayListOf<OrderProductCrossRef>()
 
-
+        var lastFoundIndex=0
         oldSoldProducts.forEach{oldSoldProduct->
 
-            val indexInNewSoldProducts=soldProductsBinarySearch(
-                soldProductId=oldSoldProduct.productId,
-                inList=newSoldProducts
-            )
+            val indexInNewSoldProducts=newSoldProducts.binarySearchBy(
+                key=oldSoldProduct.productId,
+                fromIndex=lastFoundIndex
+
+            ){it.productId}
 
             val orderProductCrossRef=orderProductCrossRefOf(order,oldSoldProduct)
 
-            if(indexInNewSoldProducts==-1){
+            if(indexInNewSoldProducts<0){
                 // as deleting the product
                 oldSoldProduct.availableQuantity+=oldSoldProduct.soldQuantity
 
@@ -168,6 +132,7 @@ constructor(
                 deletedSoldProductsCrossRefs.add(orderProductCrossRef)
             }
             else{
+                lastFoundIndex=indexInNewSoldProducts
                 if(oldSoldProduct.soldQuantity!=newSoldProducts[indexInNewSoldProducts].soldQuantity){
                     // as deleting the product
                     oldSoldProduct.availableQuantity+=oldSoldProduct.soldQuantity
@@ -211,53 +176,39 @@ constructor(
         }
     }
 
-    private fun sortSoldProducts(list:List<SoldProduct>):MutableList<SoldProduct>{
-        val l=list.toMutableList()
-        for(i in l.indices){
+    fun delete(order:Order,onDone:()->Unit={}){
+        /*
+        1- get full order info from database if order's soldProducts list is null
+        2- delete order from database
+        3- increase available qty of sold products in database
+        4- update products in database
+        5- delete orderProductCrossRefs in database
+        6- invoke onDone
+        */
+        viewModelScope.launch(ioDispatcher){
 
-            var indexOfMin=i
+            // 1- get full order info from database if order's soldProducts list is null
+            val orderToDelete=if(order.soldProducts==null)getOrder(order)else order
 
-            for(j in i..l.lastIndex)
-                if(l[j].productId<l[indexOfMin].productId)
-                    indexOfMin=j
+            // 2- delete order from database
+            orderRepository.deleteOrder(orderToDelete)
 
-            val tempI=l[i]
-            l[i]=l[indexOfMin]
-            l[indexOfMin]=tempI
-        }
-        return l.toMutableList()
-    }
-
-    private fun soldProductsBinarySearch(
-        soldProductId:Int,
-        inList:List<SoldProduct>,
-        lowIndex:Int=0,
-        highIndex:Int=inList.lastIndex
-    ):Int{
-
-        var low=lowIndex
-        var high=highIndex
-
-        while(low<=high){
-            val mid=(low+high)/2 // mid = low + (high-low)/2
-
-            inList[mid].productId.let{midId->
-                when{
-                    midId==soldProductId->return mid
-                    soldProductId<midId->{
-                        if(inList[low].productId==soldProductId)return low
-                        low++
-                        high=mid-1
-                    }
-                    soldProductId>midId->{
-                        if(inList[high].productId==soldProductId)return high
-                        high--
-                        low=mid+1
-                    }
+            // 3- increase available qty of sold products in database
+            orderToDelete.soldProducts!!.forEach{soldProduct->
+                with(soldProduct){
+                    availableQuantity+=soldQuantity
                 }
             }
+
+            // 4- update products in database
+            updateProducts(orderToDelete.soldProducts!!)
+
+            // 5- delete orderProductCrossRefs in database
+            orderRepository.deleteAllOrderProductCrossRefsWhere(orderToDelete.orderId)
+
+            // 6- invoke onDone
+            withContext(Main){onDone.invoke()}
         }
-        return -1
     }
 
     fun setOrderInfo(order:Order,onDone:()->Unit){
@@ -287,7 +238,7 @@ constructor(
         var lastOrderId=0
         allOrders.value!!.also{
             if(it.isNotEmpty())
-                // The list is in desc order already from the dao, so the first item is the last here.
+            // The list is in desc order already from the dao, so the first item is the last here.
                 lastOrderId=it.first().orderId
         }
         val currentDate=GregorianCalendar.getInstance().time
@@ -302,6 +253,7 @@ constructor(
 
     val areOrderInfoSoldProductsChanged get()=_orderInfoOldSoldProducts.value!=orderInfo.value!!.soldProducts
 
+    private suspend fun updateProducts(products:List<Product>)=orderRepository.updateProducts(products)
 
     private fun orderProductCrossRefOf(order:Order,soldProduct:SoldProduct)=
         OrderProductCrossRef(

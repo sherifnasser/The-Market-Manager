@@ -17,8 +17,8 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentBottomSheetDialogUpdateProductInfoBinding
-import com.sherifnasser.themarketmanager.notifyUi
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
+import com.sherifnasser.themarketmanager.util.notifyUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,7 +28,7 @@ class UpdateProductInfoBottomSheetDialogFragment:BottomSheetDialogFragment(){
     private val productViewModel:ProductViewModel by activityViewModels()
     private val args: UpdateProductInfoBottomSheetDialogFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View?{
+    override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View{
         binding=FragmentBottomSheetDialogUpdateProductInfoBinding.inflate(inflater,container,false)
         return binding!!.root
     }

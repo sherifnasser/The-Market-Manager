@@ -13,10 +13,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogProductSoldQuantityBinding
-import com.sherifnasser.themarketmanager.hideKeyboard
-import com.sherifnasser.themarketmanager.notifyUi
-import com.sherifnasser.themarketmanager.showKeyboard
 import com.sherifnasser.themarketmanager.ui.viewmodel.OrderViewModel
+import com.sherifnasser.themarketmanager.util.hideKeyboard
+import com.sherifnasser.themarketmanager.util.notifyUi
+import com.sherifnasser.themarketmanager.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

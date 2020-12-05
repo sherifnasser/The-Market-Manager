@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.database.model.SoldProduct
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddOrderProductBinding
-import com.sherifnasser.themarketmanager.hideKeyboard
 import com.sherifnasser.themarketmanager.ui.adapter.AddOrderSelectedProductRecyclerViewAdapter
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
+import com.sherifnasser.themarketmanager.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
