@@ -28,8 +28,8 @@ class MainActivity:AppCompatActivity(){
         navController=findNavController(R.id.nav_host_fragment)
         val topLevelDestinationIds=setOf(
             R.id.nav_dashboard,
-            R.id.nav_store,
-            R.id.nav_orders
+            R.id.nav_orders,
+            R.id.nav_store
         )
         appBarConfig=AppBarConfiguration(topLevelDestinationIds,binding.drawerLayout)
         setupActionBarWithNavController(navController,appBarConfig)

@@ -32,5 +32,17 @@ interface ProductDao{
             ORDER BY productId DESC
             """
     )
-    fun getProductsByName(nameQuery:String):DataSource.Factory<Int,Product>
+    fun getProductByName(nameQuery:String):DataSource.Factory<Int,Product>
+
+    @Query(
+        """
+            SELECT products_table.*
+            FROM products_fts
+            JOIN products_table
+            ON (products_fts.rowId=productId)
+            WHERE products_fts MATCH 0
+            ORDER BY productId DESC
+            """
+    )
+    fun getAllUnavailableProducts():DataSource.Factory<Int,Product>
 }

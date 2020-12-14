@@ -101,7 +101,7 @@ class OrderInfoDialogFragment():DialogFragment(){
                 binding!!.orderDateTextView.text=getString(R.string.date_colon,orderDate)
             }
 
-            observe(viewLifecycleOwner,Observer{order->
+            observe(viewLifecycleOwner,{order->
                 val soldProductsList=order.soldProducts!!.toList()
                 // Show "Tab + to add products" text view when list is empty
                 binding!!.tabPlusTextView.visibility=if(soldProductsList.isEmpty())View.VISIBLE else View.GONE

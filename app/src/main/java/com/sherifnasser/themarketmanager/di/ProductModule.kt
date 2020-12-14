@@ -3,6 +3,7 @@ package com.sherifnasser.themarketmanager.di
 import androidx.lifecycle.MutableLiveData
 import com.sherifnasser.themarketmanager.database.TheMarketManagerDatabase
 import com.sherifnasser.themarketmanager.database.model.Product
+import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +18,9 @@ object ProductModule{
 
     @Provides
     fun provideProductNameQueryLiveData()=MutableLiveData<String>(null)
+
+    @Provides
+    fun provideProductsFilterLiveData()=MutableLiveData(ProductViewModel.ALL_PRODUCTS_FILTER)
 
     @Provides
     fun provideProductInfoLiveData()=MutableLiveData<Product>(null)

@@ -3,10 +3,7 @@ package com.sherifnasser.themarketmanager.ui.widget
 import android.animation.Animator
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewAnimationUtils
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doOnTextChanged
@@ -29,13 +26,18 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     private val binding = AppSearchViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     // To create circular reveal animation.
-    private val cX by lazy { with(binding.clearBtn) { (right + left) / 2 } }
+    private val cX by lazy{binding.clearBtn.let{btn->(btn.right+btn.left)/2}}
     private val cY by lazy { (height / 2) }
     private val revealRadius by lazy { width.toFloat() }
     private val revealDuration by lazy { 250L }
 
     // To make the circular reveal ends at back btn
-    private val cXBackBtn by lazy { with(binding.backBtn) { (right + left) / 2 } }
+    private val cXBackBtn by lazy {binding.backBtn.let{btn->(btn.right+btn.left)/2}}
+
+    // Since there is no SAM-conversion with interface in kotlin, I decided to use higher-order function to avoid the ugly code.
+    private lateinit var onQueryTextChangedListener: (CharSequence?) -> Unit
+
+    private lateinit var appSearchListener:AppSearchListener
 
     // Initialize
     init {
@@ -101,20 +103,20 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     }
 
     // Open the search with animation when the menuItem clicked.
-    fun setupWithMenuItem(menuItem: MenuItem) {
-        menuItem.setOnMenuItemClickListener {
-            if (!isSearchOpened)
-                openSearchWithAnimation()
+    fun setupWithMenuItem(menuItem:MenuItem){
+        menuItem.setOnMenuItemClickListener{
+            if(!isSearchOpened)openSearchWithAnimation()
             true
         }
     }
 
-    // Since there is no SAM-conversion with interface in kotlin, I decided to use higher-order function to avoid the ugly code.
-    private lateinit var onQueryTextChangedListener: (CharSequence?) -> Unit
-
     // Called when the query changed
     fun setOnQueryTextChangedListener(listener: (CharSequence?) -> Unit) {
         onQueryTextChangedListener = listener
+    }
+
+    fun setSearchListener(listener:AppSearchListener){
+        appSearchListener=listener
     }
 
     // Open search view with circular reveal animation
@@ -195,7 +197,7 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     // Open the search then show it.
     private fun open() {
         isSearchOpened = true
-        //onOpened()
+        appSearchListener.onSearchOpened()
         show()
     }
 
@@ -204,7 +206,7 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         showLayout()
         showKeyboard()
         isSearchShown = true
-        //onShown()
+        appSearchListener.onSearchShown()
     }
 
     // Hide the search & keyboard.
@@ -212,7 +214,7 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         hideLayout()
         hideKeyboard()
         isSearchShown = false
-        //onHidden()
+        appSearchListener.onSearchHidden()
     }
 
     // Hide the search & clear query then close the search.
@@ -220,7 +222,7 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         hide()
         clearQuery()
         isSearchOpened = false
-        //onClosed()
+        appSearchListener.onSearchClosed()
     }
 
     // Show the search view
@@ -234,4 +236,11 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
 
     // Hide the keyboard
     private fun hideKeyboard() = hideKeyboard(binding.queryEditText)
+
+    interface AppSearchListener{
+        fun onSearchOpened()
+        fun onSearchShown()
+        fun onSearchHidden()
+        fun onSearchClosed()
+    }
 }

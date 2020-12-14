@@ -13,8 +13,12 @@ constructor(private val productDao:ProductDao){
 
     /*
     _allProducts: the all products existing in the database (it's liveData of pagedList of products to achieve paging).
+
+    _allUnavailableProducts: the all unavailable products existing in the database (it's liveData of pagedList of products to achieve paging).
      */
     private val _allProducts by lazy{productDao.getAllProducts()}
+    
+    private val _allUnavailableProducts by lazy{productDao.getAllUnavailableProducts()}
     
     // Insert new product to database.
     suspend fun insert(product:Product)=productDao.insert(product)
@@ -22,10 +26,13 @@ constructor(private val productDao:ProductDao){
     // Update existing product.
     suspend fun update(product:Product)=productDao.update(product)
 
-    // Search in products by productName.
-    fun getProductsByName(nameQuery:String)=productDao.getProductsByName(nameQuery)
+    // Search products by productName.
+    fun getProductByName(nameQuery:String)=productDao.getProductByName(nameQuery)
 
-    // Getter of _products (it returns liveData of pagedList of products to achieve paging).
+    // Getter for _products (it returns liveData of pagedList of products to achieve paging).
     val allProducts get()=_allProducts
-
+    
+    // Getter for _allUnavailableProducts (it returns liveData of pagedList of products to achieve paging).
+    val allUnavailableProducts get()=_allUnavailableProducts
+    
 }
