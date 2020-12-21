@@ -14,10 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentDialogAddProductBinding
 import com.sherifnasser.themarketmanager.ui.viewmodel.ProductViewModel
-import com.sherifnasser.themarketmanager.util.clearError
-import com.sherifnasser.themarketmanager.util.hideKeyboard
-import com.sherifnasser.themarketmanager.util.showError
-import com.sherifnasser.themarketmanager.util.showKeyboard
+import com.sherifnasser.themarketmanager.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,7 +41,7 @@ class AddProductDialogFragment:DialogFragment(){
         }
     }
 
-    override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View?{
+    override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?):View{
         binding=FragmentDialogAddProductBinding.inflate(inflater,container,false)
         return binding!!.root
     }
@@ -107,11 +104,7 @@ class AddProductDialogFragment:DialogFragment(){
 
             // Change the product qty when text changed.
             doOnTextChanged{text,_,_,_->
-                try{
-                    product.availableQuantity=text.toString().toInt()
-                }catch(e:Exception){
-                    product.availableQuantity=0
-                }
+                product.availableQuantity=text.toString().toInt()
             }
 
             // When user the hit Enter key
@@ -201,17 +194,9 @@ class AddProductDialogFragment:DialogFragment(){
 
     // Validate the product available quantity field.
     private fun isQtyFieldValid():Boolean{
-        productAvailableQuantityEditText.text.toString().apply{
-            when{
-                isEmpty()->{
-                    binding!!.productAvailableQuantityTextInputLayout.showError(getString(R.string.error_field_cannot_be_empty))
-                    return@isQtyFieldValid false
-                }
-                toInt()<0->{
-                    binding!!.productAvailableQuantityTextInputLayout.showError(getString(R.string.error_quantity_cannot_be_negative))
-                    return@isQtyFieldValid false
-                }
-            }
+        if(productAvailableQuantityEditText.text.isEmpty()){
+            binding!!.productAvailableQuantityTextInputLayout.showError(getString(R.string.error_field_cannot_be_empty))
+            return false
         }
         return true
     }

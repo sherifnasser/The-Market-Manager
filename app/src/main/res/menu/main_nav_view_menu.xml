@@ -4,6 +4,9 @@
         <item android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_dashboard"
             android:title="@string/dashboard"/>
+        <item android:id="@+id/nav_analytics"
+            android:icon="@drawable/ic_analytics"
+            android:title="@string/analytics"/>
         <item android:id="@+id/nav_orders"
             android:icon="@drawable/ic_orders"
             android:title="@string/orders"/>

@@ -77,7 +77,9 @@ class OrdersFragment:Fragment(){
         /*
         It will show any orders in recyclerView.
          */
-        orderViewModel.allOrders.observe(viewLifecycleOwner,Observer{list->
+        orderViewModel.allOrders.observe(viewLifecycleOwner,{list->
+            // Show "There are no orders" text view when list is empty
+            binding!!.thereAreNoOrdersTextView.visibility=if(list.isEmpty())View.VISIBLE else View.GONE
             // Submit the new list and display it.
             mAdapter.submitList(list){
                 // Scroll to first item when list submitted

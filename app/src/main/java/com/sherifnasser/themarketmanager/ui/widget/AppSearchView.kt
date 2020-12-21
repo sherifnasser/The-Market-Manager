@@ -121,7 +121,7 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
 
     // Open search view with circular reveal animation
     private fun openSearchWithAnimation() {
-        showLayout() // The Search should be visible before animation
+        preOpen() // The Search should be visible before animation
         ViewAnimationUtils.createCircularReveal(binding.root, cX, cY, 0f, revealRadius)
             .apply {
                 duration = revealDuration
@@ -143,6 +143,8 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
      cX: the default value is this.cX and it may change when closing search with animation ends at back btn.
      */
     fun closeSearchWithAnimation(cX: Int = this.cX) {
+        if(cX!=cXBackBtn)
+            preClose()
         ViewAnimationUtils.createCircularReveal(binding.root, cX, cY, revealRadius, 0f)
             .apply {
                 duration = revealDuration
@@ -152,8 +154,8 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
                   override fun onAnimationCancel(animation: Animator?) = Unit
                   override fun onAnimationEnd(animation: Animator?) {
                     // It will hide not to close the search if destination is top of the destination that has search.
-                    if (cX == cXBackBtn) hide()
-                    else close()
+                    if (cX != cXBackBtn) close()
+                    else hide()
                     removeAllListeners()
                   }
                 })
@@ -194,6 +196,12 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     // To handle the onBackPressed()
     val shouldClose get() = isSearchShown
 
+    // Before opening the search.
+    private fun preOpen(){
+        showLayout()
+        appSearchListener.onSearchPreOpened()
+    }
+
     // Open the search then show it.
     private fun open() {
         isSearchOpened = true
@@ -217,6 +225,12 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         appSearchListener.onSearchHidden()
     }
 
+
+    // Before closing the search.
+    private fun preClose(){
+        appSearchListener.onSearchPreClosed()
+    }
+
     // Hide the search & clear query then close the search.
     private fun close() {
         hide()
@@ -238,9 +252,11 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     private fun hideKeyboard() = hideKeyboard(binding.queryEditText)
 
     interface AppSearchListener{
+        fun onSearchPreOpened()
         fun onSearchOpened()
         fun onSearchShown()
         fun onSearchHidden()
+        fun onSearchPreClosed()
         fun onSearchClosed()
     }
 }

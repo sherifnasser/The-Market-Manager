@@ -3,6 +3,7 @@ package com.sherifnasser.themarketmanager.ui.fragment.store
 import android.app.Dialog
 import android.os.Bundle
 import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,6 +92,7 @@ class UpdateProductInfoBottomSheetDialogFragment:BottomSheetDialogFragment(){
                 R.string.available_quantity->{
                     setText(product.availableQuantity.toString())
                     inputType=InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+                    keyListener=DigitsKeyListener.getInstance("0123456789")
                 }
             }
             // Select all text
@@ -125,14 +127,7 @@ class UpdateProductInfoBottomSheetDialogFragment:BottomSheetDialogFragment(){
                             }
                             product.price=toDouble()
                         }
-                        R.string.available_quantity->{
-                            // validate available quantity
-                            if(toInt()<0){
-                                toast(R.string.error_quantity_cannot_be_negative)
-                                return
-                            }
-                            product.availableQuantity=toInt()
-                        }
+                        R.string.available_quantity->product.availableQuantity=toInt()
                     }
                     productViewModel.productInfo.notifyUi()
                     productViewModel.update(product)

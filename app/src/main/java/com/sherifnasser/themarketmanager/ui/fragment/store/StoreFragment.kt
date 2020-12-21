@@ -2,6 +2,8 @@ package com.sherifnasser.themarketmanager.ui.fragment.store
 
 import android.os.Bundle
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -48,7 +50,6 @@ class StoreFragment:Fragment(){
 
 
     private fun setupChipGroup(){
-
         binding!!.productsChipGroup.let{group->
             val lastCheckedFilter=productViewModel.productsFilter
             group.setOnCheckedChangeListener{_,checkedId->
@@ -118,14 +119,61 @@ class StoreFragment:Fragment(){
                 productViewModel.getProductsByName(it.toString())
             }
             setSearchListener(object:AppSearchView.AppSearchListener{
-                override fun onSearchOpened(){
-                    binding!!.productsChipGroup.visibility=View.GONE
+
+                private fun hideChipGroup(){
+                    binding!!.productsChipGroupCardView.let{group->
+                        if(group.visibility!=View.GONE){
+                            group.translationY=-100f
+                            group.visibility=View.GONE
+                        }
+                    }
                 }
-                override fun onSearchShown()=Unit
+
+                private fun showChipGroup(){
+                    binding!!.productsChipGroupCardView.visibility=View.VISIBLE
+                }
+
+                override fun onSearchPreOpened(){
+                    binding!!.productsChipGroupCardView.let{cardView->
+                        val animation=TranslateAnimation(0f,0f,0f,-100f)
+                            .apply{
+                                duration=200
+                                setAnimationListener(object :Animation.AnimationListener{
+                                    override fun onAnimationStart(animation:Animation?)=Unit
+                                    override fun onAnimationRepeat(animation: Animation?)=Unit
+                                    override fun onAnimationEnd(animation:Animation?)=hideChipGroup()
+                                })
+                            }
+                        cardView.startAnimation(animation)
+                    }
+                }
+
+                override fun onSearchOpened()=Unit
+
+                override fun onSearchShown(){
+                    post{hideChipGroup()}
+                }
+
                 override fun onSearchHidden()=Unit
-                override fun onSearchClosed(){
-                    binding!!.productsChipGroup.visibility=View.VISIBLE
+
+                override fun onSearchPreClosed(){
+                    binding!!.productsChipGroupCardView.let{cardView->
+                        cardView.translationY=0f // There will be a flash if we set translation inside the onAnimationEnd.
+                        val animation=TranslateAnimation(0f,0f,-100f,0f)
+                            .apply{
+                                duration=200
+                                setAnimationListener(object:Animation.AnimationListener{
+                                    override fun onAnimationStart(animation:Animation?)=showChipGroup() // it should be visible before animation
+                                    override fun onAnimationRepeat(animation: Animation?)=Unit
+                                    override fun onAnimationEnd(animation:Animation?)=Unit
+                                })
+                            }
+                        cardView.startAnimation(animation)
+                    }
                 }
+
+                override fun onSearchClosed()=Unit
+
             })
         }
         super.onCreateOptionsMenu(menu,inflater)

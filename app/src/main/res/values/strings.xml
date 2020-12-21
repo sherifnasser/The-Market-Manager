@@ -13,7 +13,6 @@
     <string name="save">Save</string>
     <string name="error_field_cannot_be_empty">Field cannot be empty!</string>
     <string name="error_price_cannot_be_zero">Price cannot be zero!</string>
-    <string name="error_quantity_cannot_be_negative">Quantity cannot be negative!</string>
     <string name="product_name_field_helper_text_add_product_dialog_fragment">Be careful when entering a product name. It cannot be updated later.</string>
     <string name="confirm_product_information">Confirm product information</string>
     <string name="add_product_confirm_dialog_message">Make sure that product info are correct. The product name cannot be updated later.</string>
@@ -53,4 +52,6 @@
     <string name="there_are_no_products">There are no products</string>
     <string name="all_products_are_available">All products are available</string>
     <string name="no_results_found">No results found</string>
+    <string name="there_are_no_orders">There are no orders</string>
+    <string name="analytics">Analytics</string>
 </resources>
