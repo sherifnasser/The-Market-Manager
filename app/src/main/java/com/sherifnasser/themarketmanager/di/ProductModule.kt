@@ -12,10 +12,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 object ProductModule{
-
-    @Provides
-    fun provideProductDao(db:TheMarketManagerDatabase)=db.productDao()
-
     @Provides
     fun provideProductNameQueryLiveData()=MutableLiveData<String>(null)
 

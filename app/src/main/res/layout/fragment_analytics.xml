@@ -6,4 +6,13 @@
     tools:context="ui.fragment.analytics.AnalyticsFragment"
     android:fitsSystemWindows="true"
     android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="24sp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

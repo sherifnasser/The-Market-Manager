@@ -6,15 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.sherifnasser.themarketmanager.database.model.Order
-import com.sherifnasser.themarketmanager.database.model.OrderProductCrossRef
-import com.sherifnasser.themarketmanager.database.model.Product
-import com.sherifnasser.themarketmanager.database.model.SoldProduct
+import com.sherifnasser.themarketmanager.database.model.*
 import com.sherifnasser.themarketmanager.repository.OrderRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 import java.util.GregorianCalendar
 import kotlin.collections.ArrayList
 
@@ -67,7 +65,8 @@ constructor(
         2- decrease available qty of sold products
         3- update products in database
         4- insert orderProductCrossRefs in database
-        5- invoke onDone
+        5- update order day
+        6- invoke onDone
         */
 
         viewModelScope.launch(ioDispatcher){
@@ -91,7 +90,13 @@ constructor(
             // 4- insert orderProductCrossRefs in database
             orderRepository.insertOrderProductCrossRefs(orderProductCrossRefs)
 
-            // 5- invoke onDone
+            //5- update order date
+            val ordersDay=getOrdersDay(order.day)
+            ordersDay.ordersDoneCount++
+            ordersDay.revenue+=order.total
+            orderRepository.updateOrdersDay(ordersDay)
+
+            // 6- invoke onDone
             withContext(Main){onDone.invoke()}
         }
     }
@@ -171,6 +176,12 @@ constructor(
                 updateOrderProductCrossRefs(updatedSoldProductsCrossRefs)
                 deleteOrderProductCrossRefs(deletedSoldProductsCrossRefs)
 
+                val orderDay=getOrdersDay(order.day)
+                val oldOrderTotal=_orderInfoOldSoldProducts.value!!.sumByDouble{it.price}
+                orderDay.revenue-=oldOrderTotal
+                orderDay.revenue+=order.total
+                orderRepository.updateOrdersDay(orderDay)
+
                 withContext(Main){onDone.invoke()}
             }
         }
@@ -183,7 +194,8 @@ constructor(
         3- increase available qty of sold products in database
         4- update products in database
         5- delete orderProductCrossRefs in database
-        6- invoke onDone
+        6- update order day
+        7- invoke onDone
         */
         viewModelScope.launch(ioDispatcher){
 
@@ -206,7 +218,13 @@ constructor(
             // 5- delete orderProductCrossRefs in database
             orderRepository.deleteAllOrderProductCrossRefsWhere(orderToDelete.orderId)
 
-            // 6- invoke onDone
+            // 6- update order day
+            val orderDay=getOrdersDay(order.day)
+            orderDay.ordersDoneCount--
+            orderDay.revenue-=order.total
+            orderRepository.updateOrdersDay(orderDay)
+
+            // 7- invoke onDone
             withContext(Main){onDone.invoke()}
         }
     }
@@ -262,4 +280,5 @@ constructor(
             soldQuantity=soldProduct.soldQuantity
         )
 
+    private suspend fun getOrdersDay(day:Date)=orderRepository.getOrdersDay(day)
 }

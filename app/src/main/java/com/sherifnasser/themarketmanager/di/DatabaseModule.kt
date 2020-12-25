@@ -22,4 +22,17 @@ object DatabaseModule{
             TheMarketManagerDatabase::class.java,
             TheMarketManagerDatabase.DATABASE_NAME
         ).fallbackToDestructiveMigration().build()
+
+    @Provides
+    fun provideProductDao(db:TheMarketManagerDatabase)=db.productDao()
+
+    @Provides
+    fun provideOrderDao(db:TheMarketManagerDatabase)=db.orderDao()
+
+    @Provides
+    fun provideOrderProductCrossRefDao(db:TheMarketManagerDatabase)=db.orderProductCrossRefDao()
+
+    @Provides
+    fun provideOrdersDayDao(db:TheMarketManagerDatabase)=db.ordersDayDao()
+
 }

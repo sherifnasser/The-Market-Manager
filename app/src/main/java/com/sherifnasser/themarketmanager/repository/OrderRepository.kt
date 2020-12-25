@@ -2,24 +2,29 @@ package com.sherifnasser.themarketmanager.repository
 
 import com.sherifnasser.themarketmanager.database.dao.OrderDao
 import com.sherifnasser.themarketmanager.database.dao.OrderProductCrossRefDao
+import com.sherifnasser.themarketmanager.database.dao.OrdersDayDao
 import com.sherifnasser.themarketmanager.database.dao.ProductDao
 import com.sherifnasser.themarketmanager.database.model.Order
 import com.sherifnasser.themarketmanager.database.model.OrderProductCrossRef
+import com.sherifnasser.themarketmanager.database.model.OrdersDay
 import com.sherifnasser.themarketmanager.database.model.Product
 import javax.inject.Inject
+import java.util.Date
 
 class OrderRepository
 @Inject
 constructor(
     private val productDao:ProductDao,
     private val orderDao:OrderDao,
-    private val orderProductCrossRefDao:OrderProductCrossRefDao
+    private val orderProductCrossRefDao:OrderProductCrossRefDao,
+    private val ordersDayDao:OrdersDayDao
 ){
 
     private val _allOrders by lazy{orderDao.getAllOrders()}
+    val allOrders get()=_allOrders
+
 
     suspend fun getOrderWithProducts(orderId:Int)=orderDao.getOrderWithProducts(orderId)
-
 
     suspend fun insertOrder(order:Order)=orderDao.insert(order)
 
@@ -49,5 +54,8 @@ constructor(
         orderProductCrossRefDao.getQuantityOfSoldProduct(orderId,productId)
 
 
-    val allOrders get()=_allOrders
+
+    suspend fun getOrdersDay(day:Date)=ordersDayDao.get(day)
+
+    suspend fun updateOrdersDay(ordersDay:OrdersDay)=ordersDayDao.update(ordersDay)
 }

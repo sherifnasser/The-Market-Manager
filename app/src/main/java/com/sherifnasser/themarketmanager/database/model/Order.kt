@@ -3,7 +3,12 @@ package com.sherifnasser.themarketmanager.database.model
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import java.util.*
+import com.sherifnasser.themarketmanager.util.dayOfDate
+import com.sherifnasser.themarketmanager.util.monthOfDate
+import com.sherifnasser.themarketmanager.util.yearOfDate
+import java.util.Date
+import java.util.GregorianCalendar
+import kotlin.collections.ArrayList
 
 @Entity(tableName="orders_table")
 data class Order
@@ -14,6 +19,9 @@ constructor(
 ){
     @Ignore
     var soldProducts:List<SoldProduct>?=null
+
+    @Ignore
+    val day:Date=GregorianCalendar(date.yearOfDate,date.monthOfDate,date.dayOfDate).time
 
     fun addToSoldProducts(product:SoldProduct){
         val soldProductsArrayList=soldProducts!! as ArrayList
