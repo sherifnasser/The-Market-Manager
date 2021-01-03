@@ -13,9 +13,8 @@ object MainActivityModule{
     @Provides
     fun provideTopLevelDestinationIds()=setOf(
         R.id.nav_dashboard,
-        R.id.nav_analytics,
+        R.id.nav_statistics,
         R.id.nav_orders,
         R.id.nav_store
     )
-
 }

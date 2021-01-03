@@ -55,7 +55,9 @@ constructor(
 
 
 
-    suspend fun getOrdersDay(day:Date)=ordersDayDao.get(day)
+    suspend fun insertOrdersDay(ordersDay:OrdersDay)=ordersDayDao.insert(ordersDay)
 
     suspend fun updateOrdersDay(ordersDay:OrdersDay)=ordersDayDao.update(ordersDay)
+
+    suspend fun getOrdersDay(day:Date)=ordersDayDao.get(day)
 }

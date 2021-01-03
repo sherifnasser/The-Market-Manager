@@ -8,6 +8,7 @@ import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.sherifnasser.themarketmanager.database.model.*
 import com.sherifnasser.themarketmanager.repository.OrderRepository
+import com.sherifnasser.themarketmanager.util.startOfDay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -91,10 +92,17 @@ constructor(
             orderRepository.insertOrderProductCrossRefs(orderProductCrossRefs)
 
             //5- update order date
-            val ordersDay=getOrdersDay(order.day)
+            val startOfDay=order.date.startOfDay
+            var isNewOrdersDay=false
+            val ordersDay=
+                getOrdersDay(startOfDay)?:
+                OrdersDay(startOfDay).also{
+                    isNewOrdersDay=true
+                }
             ordersDay.ordersDoneCount++
             ordersDay.revenue+=order.total
-            orderRepository.updateOrdersDay(ordersDay)
+            if(isNewOrdersDay)orderRepository.insertOrdersDay(ordersDay)
+            else orderRepository.updateOrdersDay(ordersDay)
 
             // 6- invoke onDone
             withContext(Main){onDone.invoke()}
@@ -176,8 +184,8 @@ constructor(
                 updateOrderProductCrossRefs(updatedSoldProductsCrossRefs)
                 deleteOrderProductCrossRefs(deletedSoldProductsCrossRefs)
 
-                val orderDay=getOrdersDay(order.day)
-                val oldOrderTotal=_orderInfoOldSoldProducts.value!!.sumByDouble{it.price}
+                val orderDay=getOrdersDay(order.date.startOfDay)!!
+                val oldOrderTotal=_orderInfoOldSoldProducts.value!!.sumByDouble{it.price*it.soldQuantity}
                 orderDay.revenue-=oldOrderTotal
                 orderDay.revenue+=order.total
                 orderRepository.updateOrdersDay(orderDay)
@@ -200,13 +208,15 @@ constructor(
         viewModelScope.launch(ioDispatcher){
 
             // 1- get full order info from database if order's soldProducts list is null
-            val orderToDelete=if(order.soldProducts==null)getOrder(order)else order
+            val orderToDelete=if(order.soldProducts==null)getOrder(order)else
+                order.apply{soldProducts=_orderInfoOldSoldProducts.value}
+
 
             // 2- delete order from database
             orderRepository.deleteOrder(orderToDelete)
 
             // 3- increase available qty of sold products in database
-            orderToDelete.soldProducts!!.forEach{soldProduct->
+            orderToDelete.soldProducts!!.forEach{ soldProduct->
                 with(soldProduct){
                     availableQuantity+=soldQuantity
                 }
@@ -219,9 +229,9 @@ constructor(
             orderRepository.deleteAllOrderProductCrossRefsWhere(orderToDelete.orderId)
 
             // 6- update order day
-            val orderDay=getOrdersDay(order.day)
+            val orderDay=getOrdersDay(order.date.startOfDay)!!
             orderDay.ordersDoneCount--
-            orderDay.revenue-=order.total
+            orderDay.revenue-=orderToDelete.soldProducts!!.sumByDouble{it.price*it.soldQuantity}
             orderRepository.updateOrdersDay(orderDay)
 
             // 7- invoke onDone
