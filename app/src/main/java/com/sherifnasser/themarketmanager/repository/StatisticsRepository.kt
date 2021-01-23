@@ -1,15 +1,15 @@
 package com.sherifnasser.themarketmanager.repository
 
 import com.sherifnasser.themarketmanager.database.dao.OrdersDayDao
+import java.util.Date
 import javax.inject.Inject
 
-class AnalyticsRepository
+class StatisticsRepository
 @Inject
 constructor(
-    ordersDayDao:OrdersDayDao
+    private val ordersDayDao:OrdersDayDao
 ){
-    private val _allOrdersDays by lazy{ordersDayDao.getAll()}
 
-    val allOrdersDay get()=_allOrdersDays
+    suspend fun getBetween(from:Date,to:Date)=ordersDayDao.getBetween(from,to)
 
 }

@@ -90,6 +90,21 @@ class AddOrderProductDialogFragment:DialogFragment(){
         }
 
         productViewModel.products.observe(viewLifecycleOwner){list->
+            /*
+            Show "There are no products" if there are no products added in the store
+            Or show "No results found" if user searches for a product and there are no results.
+            */
+            with(binding!!.productsInfoTextView){
+                if(list.isEmpty()){
+                    visibility=View.VISIBLE
+                    text=when{
+                        !productViewModel.areThereProductsInStore->getString(R.string.there_are_no_products)
+                        productViewModel.isThereQueryInSearch->getString(R.string.no_results_found)
+                        else->""
+                    }
+                }
+                else visibility=View.GONE
+            }
             // Submit the new list and display it.
             mAdapter.submitList(list){
                 // Scroll to first item when list submitted

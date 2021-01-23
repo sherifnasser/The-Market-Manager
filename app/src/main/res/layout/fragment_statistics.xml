@@ -4,11 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="ui.fragment.analytics.StatisticsFragment"
-    android:fitsSystemWindows="true"
-    android:paddingTop="20dp"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp">
+    tools:context="ui.fragment.statistics.StatisticsFragment"
+    android:fitsSystemWindows="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,18 +13,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/gray"
+            android:padding="8dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardElevation="3dp"
-                app:cardCornerRadius="10dp">
+                app:cardCornerRadius="10dp"
+                app:cardUseCompatPadding="true">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -36,6 +36,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Display4"/>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/revenue_time_filter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
@@ -43,13 +44,14 @@
                         android:layout_marginTop="8dp">
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/revenue_line_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp"
+                        android:layout_height="300dp"
                         android:layout_marginTop="10dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -61,7 +63,7 @@
                 app:cardElevation="3dp"
                 app:cardCornerRadius="10dp"
                 android:padding="20dp"
-                android:layout_marginTop="20dp">
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -76,6 +78,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Display4"/>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/orders_done_count_time_filter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
@@ -83,13 +86,14 @@
                         android:layout_marginTop="8dp">
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/orders_done_count_bar_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp"
+                        android:layout_height="300dp"
                         android:layout_marginTop="10dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

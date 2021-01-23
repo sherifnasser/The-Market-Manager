@@ -210,10 +210,10 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     }
 
     // Show the search & keyboard.
-    private fun show() {
+    private fun show(){
         showLayout()
         showKeyboard()
-        isSearchShown = true
+        isSearchShown=true
         appSearchListener.onSearchShown()
     }
 

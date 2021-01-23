@@ -17,7 +17,7 @@ interface OrderDao{
     @Delete
     suspend fun delete(order:Order)
 
-    @Query("SELECT * FROM orders_table ORDER BY date DESC")
+    @Query("SELECT * FROM orders_table ORDER BY orderId DESC")
     fun getAllOrders():DataSource.Factory<Int,Order>
 
     @Transaction

@@ -13,8 +13,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import java.util.Date
-import java.util.GregorianCalendar
 import kotlin.collections.ArrayList
 
 class OrderViewModel
@@ -269,7 +269,7 @@ constructor(
             // The list is in desc order already from the dao, so the first item is the last here.
                 lastOrderId=it.first().orderId
         }
-        val currentDate=GregorianCalendar.getInstance().time
+        val currentDate=Calendar.getInstance().time
         val order=Order(orderId=++lastOrderId,date=currentDate,total=0.0).apply{soldProducts=ArrayList()}
         orderInfo.value=order
         _orderInfoOldSoldProducts.value=emptyList()

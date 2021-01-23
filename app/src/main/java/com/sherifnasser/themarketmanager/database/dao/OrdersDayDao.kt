@@ -1,6 +1,5 @@
 package com.sherifnasser.themarketmanager.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Update
@@ -19,6 +18,6 @@ interface OrdersDayDao{
     @Query("SELECT * FROM orders_days_table WHERE day=:day")
     suspend fun get(day:Date):OrdersDay?
 
-    @Query("SELECT * FROM orders_days_table")
-    fun getAll():LiveData<List<OrdersDay>>
+    @Query("SELECT * FROM orders_days_table WHERE day BETWEEN :from AND :to")
+    suspend fun getBetween(from:Date,to:Date):List<OrdersDay>
 }

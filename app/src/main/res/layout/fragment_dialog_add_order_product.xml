@@ -43,11 +43,23 @@
                 android:imeOptions="actionSearch"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/selected_product_recycler_view"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="236dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/selected_product_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="236dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/products_info_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

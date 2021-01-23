@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_dashboard"/>
     <fragment
         android:id="@id/nav_statistics"
-        android:name="com.sherifnasser.themarketmanager.ui.fragment.analytics.StatisticsFragment"
+        android:name="com.sherifnasser.themarketmanager.ui.fragment.statistics.StatisticsFragment"
         android:label="@string/statistics"
         tools:layout="@layout/fragment_statistics"/>
     <fragment

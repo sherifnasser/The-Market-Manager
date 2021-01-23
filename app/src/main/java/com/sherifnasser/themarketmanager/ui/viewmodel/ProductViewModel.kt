@@ -83,4 +83,5 @@ constructor(
         const val ALL_PRODUCTS_FILTER=0
         const val UNAVAILABLE_PRODUCTS_FILTER=1
     }
+
 }
