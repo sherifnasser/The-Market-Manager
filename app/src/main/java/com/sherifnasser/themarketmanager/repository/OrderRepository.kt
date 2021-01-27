@@ -21,8 +21,12 @@ constructor(
 ){
 
     private val _allOrders by lazy{orderDao.getAllOrders()}
+
     val allOrders get()=_allOrders
 
+
+    // orders
+    suspend fun getLastOrderId()=orderDao.getLastOrderId()
 
     suspend fun getOrderWithProducts(orderId:Int)=orderDao.getOrderWithProducts(orderId)
 
@@ -33,7 +37,7 @@ constructor(
     suspend fun deleteOrder(order:Order)=orderDao.delete(order)
 
 
-
+    // order product cross reference
     suspend fun insertOrderProductCrossRefs(orderProductCrossRefs:List<OrderProductCrossRef>)=
         orderProductCrossRefDao.insertAll(orderProductCrossRefs)
 
@@ -47,14 +51,14 @@ constructor(
         orderProductCrossRefDao.deleteAllWhere(orderId)
 
 
-
+    // products
     suspend fun updateProducts(products:List<Product>)=productDao.updateAll(products)
 
     suspend fun getQuantityOfSoldProduct(orderId:Int,productId:Int)=
         orderProductCrossRefDao.getQuantityOfSoldProduct(orderId,productId)
 
 
-
+    // orders days
     suspend fun insertOrdersDay(ordersDay:OrdersDay)=ordersDayDao.insert(ordersDay)
 
     suspend fun updateOrdersDay(ordersDay:OrdersDay)=ordersDayDao.update(ordersDay)

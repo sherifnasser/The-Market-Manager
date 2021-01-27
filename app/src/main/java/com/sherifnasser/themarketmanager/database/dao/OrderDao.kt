@@ -1,5 +1,6 @@
 package com.sherifnasser.themarketmanager.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
 import com.sherifnasser.themarketmanager.database.model.Order
@@ -23,5 +24,11 @@ interface OrderDao{
     @Transaction
     @Query("SELECT * FROM orders_table WHERE orderId=:orderId")
     suspend fun getOrderWithProducts(orderId:Int):OrderWithProducts
+
+    @Query("SELECT orderId FROM orders_table ORDER BY orderId DESC LIMIT 1")
+    suspend fun getLastOrderId():Int?
+
+    @Query("SELECT * FROM orders_table ORDER BY orderId DESC LIMIT 1")
+    fun getLastOrder():LiveData<Order?>
 
 }

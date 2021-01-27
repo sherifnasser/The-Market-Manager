@@ -43,7 +43,7 @@ class StoreFragment:Fragment(){
         setupChipGroup()
         setupRecyclerView()
         binding!!.addProductFab.setOnClickListener{
-            productViewModel.productInfo.value=Product(0,"",0.0,0)
+            productViewModel.setProductInfoToNew()
             findNavController().navigate(R.id.action_nav_store_to_addProductDialogFragment)
         }
     }

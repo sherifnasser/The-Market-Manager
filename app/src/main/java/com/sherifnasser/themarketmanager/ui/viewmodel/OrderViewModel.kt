@@ -12,6 +12,7 @@ import com.sherifnasser.themarketmanager.util.startOfDay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
@@ -99,7 +100,7 @@ constructor(
                 OrdersDay(startOfDay).also{
                     isNewOrdersDay=true
                 }
-            ordersDay.ordersDoneCount++
+            ordersDay.doneOrdersCount++
             ordersDay.revenue+=order.total
             if(isNewOrdersDay)orderRepository.insertOrdersDay(ordersDay)
             else orderRepository.updateOrdersDay(ordersDay)
@@ -230,7 +231,7 @@ constructor(
 
             // 6- update order day
             val orderDay=getOrdersDay(order.date.startOfDay)!!
-            orderDay.ordersDoneCount--
+            orderDay.doneOrdersCount--
             orderDay.revenue-=orderToDelete.soldProducts!!.sumByDouble{it.price*it.soldQuantity}
             orderRepository.updateOrdersDay(orderDay)
 
@@ -263,16 +264,13 @@ constructor(
     }
 
     fun setOrderInfoToNew(){
-        var lastOrderId=0
-        allOrders.value!!.also{
-            if(it.isNotEmpty())
-            // The list is in desc order already from the dao, so the first item is the last here.
-                lastOrderId=it.first().orderId
+        runBlocking(ioDispatcher){
+            var lastOrderId=orderRepository.getLastOrderId()?:0
+            val currentDate=Calendar.getInstance().time
+            val order=Order(orderId=++lastOrderId,date=currentDate,total=0.0).apply{soldProducts=ArrayList()}
+            _orderInfoOldSoldProducts.postValue(emptyList())
+            orderInfo.postValue(order)
         }
-        val currentDate=Calendar.getInstance().time
-        val order=Order(orderId=++lastOrderId,date=currentDate,total=0.0).apply{soldProducts=ArrayList()}
-        orderInfo.value=order
-        _orderInfoOldSoldProducts.value=emptyList()
     }
 
     val allOrders get()=_allOrders

@@ -8,7 +8,24 @@
         android:id="@id/nav_dashboard"
         android:name="com.sherifnasser.themarketmanager.ui.fragment.dashboard.DashboardFragment"
         android:label="@string/dashboard"
-        tools:layout="@layout/fragment_dashboard"/>
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_nav_dashboard_to_nav_statistics"
+            app:destination="@id/nav_statistics" />
+        <action
+            android:id="@+id/action_nav_dashboard_to_nav_store"
+            app:destination="@id/nav_store"
+            app:enterAnim="@anim/slide_in_from_down"
+            app:exitAnim="@anim/slide_out_to_up"
+            app:popEnterAnim="@anim/slide_in_from_up"
+            app:popExitAnim="@anim/slide_out_to_down"/>
+        <action
+            android:id="@+id/action_nav_dashboard_to_orderInfoDialogFragment"
+            app:destination="@id/orderInfoDialogFragment" />
+        <action
+            android:id="@+id/action_nav_dashboard_to_addProductDialogFragment"
+            app:destination="@id/addProductDialogFragment" />
+    </fragment>
     <fragment
         android:id="@id/nav_statistics"
         android:name="com.sherifnasser.themarketmanager.ui.fragment.statistics.StatisticsFragment"

@@ -12,12 +12,12 @@ data class OrdersDaysChart(
 ){
 
     private var revenueEntries:List<Entry>?=null
-    private var ordersDoneCountEntries:List<Entry>?=null
+    private var doneOrdersCountEntries:List<Entry>?=null
 
     private var _xAxisValueFormatter:ValueFormatter?=null
 
     private var createRevenueEntry:((Float,Float)->Entry)?=null
-    private var createOrdersDoneCountEntry:((Float,Float)->Entry)?=null
+    private var createDoneOrdersCountEntry:((Float, Float)->Entry)?=null
 
     val xAxisValueFormatter get()=_xAxisValueFormatter
 
@@ -36,16 +36,16 @@ data class OrdersDaysChart(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun< E:Entry>getOrdersDoneCountEntries(dayFormat:DateFormat,createOrdersDoneCountEntry:(day:Float,ordersDoneCount:Float)->E):List<E>{
-        this.createOrdersDoneCountEntry=createOrdersDoneCountEntry
+    fun< E:Entry>getDoneOrdersCountEntries(dayFormat:DateFormat,createOrdersDoneCountEntry:(day:Float,ordersDoneCount:Float)->E):List<E>{
+        this.createDoneOrdersCountEntry=createOrdersDoneCountEntry
         val entries=provideEntries(
-            listOfEntries=ordersDoneCountEntries,
+            listOfEntries=doneOrdersCountEntries,
             dayFormat=dayFormat,
-            oldCreateEntry=this.createOrdersDoneCountEntry,
+            oldCreateEntry=this.createDoneOrdersCountEntry,
             newCreateEntry=createOrdersDoneCountEntry,
-            getY={it.ordersDoneCount.toFloat()}
+            getY={it.doneOrdersCount.toFloat()}
         )
-        ordersDoneCountEntries=entries
+        doneOrdersCountEntries=entries
         return entries as List<E>
     }
 

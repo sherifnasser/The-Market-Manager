@@ -65,6 +65,10 @@ constructor(
         getProductsByName(productNameQuery.value)
     }
 
+    fun setProductInfoToNew(){
+        productInfo.value=Product(0,"",0.0,0)
+    }
+
     // Getter for _products (it returns liveData of pagedList of products to achieve paging).
     val products get()=_products
 

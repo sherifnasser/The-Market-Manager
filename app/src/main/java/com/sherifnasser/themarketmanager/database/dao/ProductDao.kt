@@ -1,5 +1,6 @@
 package com.sherifnasser.themarketmanager.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
@@ -45,4 +46,7 @@ interface ProductDao{
             """
     )
     fun getAllUnavailableProducts():DataSource.Factory<Int,Product>
+
+    @Query("SELECT COUNT(productId) FROM products_table WHERE availableQuantity=0")
+    fun getUnavailableProductsCount():LiveData<Int>
 }

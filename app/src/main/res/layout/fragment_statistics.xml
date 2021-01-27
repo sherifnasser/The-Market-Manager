@@ -73,7 +73,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/orders_done_count"
+                        android:text="@string/done_orders_count"
                         android:textSize="20sp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Display4"/>
 

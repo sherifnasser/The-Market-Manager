@@ -21,9 +21,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.LargeValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.sherifnasser.themarketmanager.R
@@ -125,7 +123,7 @@ class StatisticsFragment:Fragment(){
             with(binding!!.revenueLineChart){
                 xAxis.valueFormatter=ordersDaysChart.xAxisValueFormatter
                 data=LineData(lineDataSet)
-                invalidate()
+                animateX(600)
             }
         }
     }
@@ -138,11 +136,11 @@ class StatisticsFragment:Fragment(){
 
         statisticsViewModel.ordersDoneCountChartOrdersDays.observe(viewLifecycleOwner,{ordersDaysChart->
             val entries=
-                ordersDaysChart.getOrdersDoneCountEntries(dayFormat=ordersDaysChartDayFormat){day,revenue->
+                ordersDaysChart.getDoneOrdersCountEntries(dayFormat=ordersDaysChartDayFormat){ day, revenue->
                     BarEntry(day,revenue)
                 }
 
-            val barDataSet=BarDataSet(entries,getString(R.string.orders_done_count)).apply{
+            val barDataSet=BarDataSet(entries,getString(R.string.done_orders_count)).apply{
                 valueTextColor=Color.BLACK
                 valueTextSize=8f
             }
@@ -153,7 +151,7 @@ class StatisticsFragment:Fragment(){
                     barWidth=0.375f
                 }
                 data.setValueFormatter(ChartDecimalValueFormatter())
-                invalidate()
+                animateY(600)
             }
         })
     }

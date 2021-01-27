@@ -7,6 +7,6 @@ import java.util.Date
 @Entity(tableName="orders_days_table")
 data class OrdersDay(
     @PrimaryKey val day:Date,
-    var ordersDoneCount:Int=0,
+    var doneOrdersCount:Int=0,
     var revenue:Double=0.0
 )
