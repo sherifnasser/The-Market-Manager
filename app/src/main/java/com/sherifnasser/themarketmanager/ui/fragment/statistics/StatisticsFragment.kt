@@ -22,16 +22,17 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.formatter.LargeValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.sherifnasser.themarketmanager.R
 import com.sherifnasser.themarketmanager.databinding.FragmentStatisticsBinding
 import com.sherifnasser.themarketmanager.di.OrdersDaysChartDayFormat
 import com.sherifnasser.themarketmanager.ui.viewmodel.StatisticsViewModel
-import com.sherifnasser.themarketmanager.util.ChartDecimalValueFormatter
 import com.sherifnasser.themarketmanager.util.DateInterval
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -150,7 +151,7 @@ class StatisticsFragment:Fragment(){
                 data=BarData(barDataSet).apply{
                     barWidth=0.375f
                 }
-                data.setValueFormatter(ChartDecimalValueFormatter())
+                data.setValueFormatter(DoneOrdersCountChartValueFormatter())
                 animateY(600)
             }
         })
@@ -200,6 +201,14 @@ class StatisticsFragment:Fragment(){
         override fun draw(canvas:Canvas?,posX:Float,posY:Float){
             super.draw(canvas,posX,posY)
             getOffsetForDrawingAtPoint(posX,posY)
+        }
+    }
+
+    private class DoneOrdersCountChartValueFormatter:ValueFormatter(){
+        private val decimalFormatter=DecimalFormat("###,###,##0")
+        override fun getFormattedValue(value:Float):String{
+            if(value==0f)return ""
+            return decimalFormatter.format(value)
         }
     }
 }

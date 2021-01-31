@@ -199,13 +199,17 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     // Before opening the search.
     private fun preOpen(){
         showLayout()
-        appSearchListener.onSearchPreOpened()
+        post{
+            appSearchListener.onSearchPreOpened()
+        }
     }
 
     // Open the search then show it.
     private fun open() {
         isSearchOpened = true
-        appSearchListener.onSearchOpened()
+        post{
+            appSearchListener.onSearchOpened()
+        }
         show()
     }
 
@@ -214,7 +218,9 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         showLayout()
         showKeyboard()
         isSearchShown=true
-        appSearchListener.onSearchShown()
+        post{
+            appSearchListener.onSearchShown()
+        }
     }
 
     // Hide the search & keyboard.
@@ -222,13 +228,17 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         hideLayout()
         hideKeyboard()
         isSearchShown = false
-        appSearchListener.onSearchHidden()
+        post{
+            appSearchListener.onSearchHidden()
+        }
     }
 
 
     // Before closing the search.
     private fun preClose(){
-        appSearchListener.onSearchPreClosed()
+        post{
+            appSearchListener.onSearchPreClosed()
+        }
     }
 
     // Hide the search & clear query then close the search.
@@ -236,7 +246,9 @@ class AppSearchView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
         hide()
         clearQuery()
         isSearchOpened = false
-        appSearchListener.onSearchClosed()
+        post{
+            appSearchListener.onSearchClosed()
+        }
     }
 
     // Show the search view

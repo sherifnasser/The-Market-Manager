@@ -46,7 +46,7 @@ data class OrdersDaysChart(
             getY={it.doneOrdersCount.toFloat()}
         )
         doneOrdersCountEntries=entries
-        return entries as List<E>
+        return doneOrdersCountEntries as List<E>
     }
 
     private fun<E:Entry>provideEntries(

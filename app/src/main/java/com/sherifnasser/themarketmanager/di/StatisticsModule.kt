@@ -1,11 +1,13 @@
 package com.sherifnasser.themarketmanager.di
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sherifnasser.themarketmanager.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import com.sherifnasser.themarketmanager.util.DateInterval
+import com.sherifnasser.themarketmanager.util.OrdersDaysChart
 import com.sherifnasser.themarketmanager.util.getCalendarAfterAdd
 import com.sherifnasser.themarketmanager.util.startOfDay
 import dagger.hilt.android.components.ActivityRetainedComponent
@@ -48,6 +50,9 @@ object StatisticsModule{
 
         return timeFiltersHashMap
     }
+
+    @Provides
+    fun provideOrdersDaysChartMapLiveData():LiveData<Map<DateInterval,OrdersDaysChart>> =MutableLiveData(HashMap())
 
     @Provides
     fun provideDateIntervalLiveData(availableTimeFilters:Map<DateInterval,Int>)=
